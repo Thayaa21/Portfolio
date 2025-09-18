@@ -1,0 +1,114 @@
+[
+    {
+        "name": "Python",
+        "icon": "https://img.icons8.com/color/48/000000/python--v1.png"
+    },
+    {
+        "name": "R Programming",
+        "icon": "https://img.icons8.com/external-tal-revivo-shadow-tal-revivo/48/000000/external-r-project-a-free-software-environment-for-statistical-computing-and-graphics-logo-shadow-tal-revivo.png"
+    },
+    {
+        "name": "C++",
+        "icon": "https://img.icons8.com/color/48/000000/c-plus-plus-logo.png"
+    },
+    {
+        "name": "Bash",
+        "icon": "https://img.icons8.com/color/48/000000/bash.png"
+    },
+    {
+        "name": "SQL",
+        "icon": "https://img.icons8.com/color/48/000000/sql.png"
+    },
+    {
+        "name": "PyTorch",
+        "icon": "assets/images/icon/pytorch.png"
+    },
+    {
+        "name": "TensorFlow",
+        "icon": "https://img.icons8.com/color/48/000000/tensorflow.png"
+    },
+    {
+        "name": "Scikit-learn",
+        "icon": "assets/images/icon/sckit.png"
+    },
+    {
+        "name": "Hugging Face",
+        "icon": "./assets/images/icon/huggingface.svg"
+    },
+    {
+        "name": "LangChain",
+        "icon": "https://img.icons8.com/color/48/000000/chain.png"
+    },
+    {
+        "name": "CrewAI",
+        "icon": "https://img.icons8.com/color/48/000000/artificial-intelligence.png"
+    },
+    {
+        "name": "Prompt Engineering",
+        "icon": "https://img.icons8.com/color/48/000000/light.png"
+    },
+    {
+        "name": "Pandas",
+        "icon": "https://img.icons8.com/color/48/000000/pandas.png"
+    },
+    {
+        "name": "NumPy",
+        "icon": "https://img.icons8.com/color/48/000000/numpy.png"
+    },
+    {
+        "name": "Power BI",
+        "icon": "https://img.icons8.com/color/48/000000/power-bi.png"
+    },
+    {
+        "name": "AWS Lambda",
+        "icon": "https://img.icons8.com/color/48/000000/amazon-web-services.png"
+    },
+    {
+        "name": "AWS EC2",
+        "icon": "https://img.icons8.com/color/48/000000/amazon-web-services.png"
+    },
+    {
+        "name": "GCP Vertex AI",
+        "icon": "https://img.icons8.com/color/48/000000/google-cloud.png"
+    },
+    {
+        "name": "Docker",
+        "icon": "https://img.icons8.com/color/48/000000/docker.png"
+    },
+    {
+        "name": "CI/CD",
+        "icon": "https://img.icons8.com/color/48/000000/deployment.png"
+    },
+    {
+        "name": "Large Language Models",
+        "icon": "assets/images/icon/llm.jpg"
+    },
+    {
+        "name": "Explainable AI",
+        "icon": "https://img.icons8.com/color/48/000000/light.png"
+    },
+    {
+        "name": "Computer Vision",
+        "icon": "https://img.icons8.com/color/48/000000/video-conference.png"
+    },
+    {
+        "name": "Natural Language Processing",
+        "icon": "https://img.icons8.com/color/48/000000/language.png"
+    },
+    {
+        "name": "Graph Neural Networks",
+        "icon": "assets/images/icon/graph.png"
+    },
+    {
+        "name": "MLOps",
+        "icon": "https://img.icons8.com/color/48/000000/deployment.png"
+    },
+    {
+        "name": "Git",
+        "icon": "https://img.icons8.com/color/48/000000/git.png"
+    },
+    {
+        "name": "GitHub",
+        "icon": "https://img.icons8.com/glyph-neue/48/000000/github.png"
+    }
+]

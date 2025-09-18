@@ -1,0 +1,57 @@
+[
+  
+  {
+    "name": "Citation-Aware Multimodal Research Analysis",
+    "desc": "Developed an AI-powered system for extracting, analyzing, and synthesizing knowledge from PDFs, citation mapping, similarity search, and a Streamlit interface.",
+    "image": "researchanalysis",
+    "category": "ai-ml",
+    "links": {
+      "view": "https://github.com/Thayaa21/Citation_aware"
+    }
+  },
+  {
+    "name": "Explainable AI Demos",
+    "desc": "Jupyter notebook collection demonstrating various XAI techniques and methodologies for model interpretability and transparency in machine learning applications.",
+    "image": "explainableai",
+    "category": "ai-ml",
+    "links": {
+      "view": "https://github.com/Thayaa21/Explainable-AI-demos"
+    }
+  },
+  {
+    "name": "EchoShield",
+    "desc": "Built a real-time AI system for voice isolation and smart ambient-mode triggers, enabling clear speech in noisy environments and detection of wake words or alerts.",
+    "image": "echosheid",
+    "category": "ai-ml",
+    "links": {
+      "view": "https://github.com/Thayaa21/EchoShield"
+    }
+  },
+  {
+    "name": "Life Copilot",
+    "desc": "Created an AI-powered personal assistant that automates daily tasks, provides decision support, and streamlines life management.",
+    "image": "lifecopilot",
+    "category": "ai-ml",
+    "links": {
+      "view": "https://github.com/Thayaa21/life_copilot"
+    }
+  },
+  {
+    "name": "AI-Enabled Drug Repurposing Platform",
+    "desc": "End-to-end pipeline integrating omics features and literature embeddings for oncology drug repurposing. Uses GNNs for cell line-drug interaction modeling and BioGPT+SciNCL for mechanism reasoning.",
+    "image": "drug",
+    "category": "ai-ml",
+    "links": {
+      "view": "https://github.com/Thayaa21"
+    }
+  },
+  {
+    "name": "AR E-Brochure Vedic Heritage",
+    "desc": "Developed an interactive AR e-brochure showcasing Vedic heritage, combining cultural storytelling with modern web and augmented reality technologies.",
+    "image": "vedicheritage",
+    "category": "web-ar",
+    "links": {
+      "view": "https://github.com/Thayaa21/ar-e-brochure-vedicheritage"
+    }
+  }
+]
