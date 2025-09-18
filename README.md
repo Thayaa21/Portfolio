@@ -2,7 +2,7 @@
 
 Welcome to my professional portfolio showcasing my expertise in Artificial Intelligence, Machine Learning, and Data Science. I'm currently pursuing a Master's in Robotics and Automation (AI) at Arizona State University and have extensive experience in building scalable AI systems.
 
-<a href="https://thayaananthan.com" target="_blank">**Visit Portfolio** 🚀</a>
+<a href="https://thayaa-portfolio.vercel.app/" target="_blank">**Visit Portfolio** 🚀</a>
 
 ## 👨‍💻 About Me
 
