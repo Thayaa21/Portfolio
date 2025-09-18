@@ -273,10 +273,11 @@ header .navbar ul li a:hover{
   padding: 1.6rem 3rem;
   border-radius: .5em;
   transition: 0.5s;
-  color: #fff;
+  color: #fff !important;
   background: #2506ad;
   box-shadow: 0px 5px 10px rgba(48, 68, 247, .6);
   text-align: center;
+  text-decoration: none !important;
 }
 .morebtn .btn span {
   font-weight: 600;
