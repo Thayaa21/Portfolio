@@ -1,7 +1,7 @@
 /* Framer-style effects & transitions */
 
 .gradient-text {
-  background: linear-gradient(135deg, #00fff7, #00d9ff, #39ff14);
+  background: linear-gradient(135deg, #dab982, #cda469, #e6d4b8);
   background-size: 200% 200%;
   -webkit-background-clip: text;
   -webkit-text-fill-color: transparent;
@@ -13,7 +13,7 @@
 }
 
 .typing-text {
-  border-right: 2px solid #00fff7;
+  border-right: 2px solid rgba(218, 185, 130, 0.6);
   animation: blink 1s step-end infinite;
 }
 

@@ -8,6 +8,7 @@
     <meta name="description" content="Thayaananthan Kanagaraj - AI/ML Engineer & Data Scientist with 2+ years experience. Master's in Robotics and Automation at Arizona State University. Current ML Lead at Vian Analytics. Expert in Large Language Models, Explainable AI, Computer Vision, Multi-Omics Analysis, and Drug Repurposing. Proficient in Python, PyTorch, TensorFlow, AWS, GCP. Available for AI/ML Engineer, Data Scientist, and Research Scientist positions." />
     <!-- Custom CSS -->
     <link rel="stylesheet" href="/assets/css/style.css">
+    <link rel="stylesheet" href="/assets/css/ornn-background.css">
     <!-- Font Awesome -->
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.3/css/all.min.css" integrity="sha512-iBBXm8fW90+nuLcSKlbmrPcLa0OT92xO1BIsZ+ywDWZCvqsWgccV3gFoRBv0z+8dLJgyAHIhR35VZc2oM/gI1w==" crossorigin="anonymous" referrerpolicy="no-referrer" />
     <!-- Favicon -->
@@ -82,6 +83,11 @@
         <div class="scroll-progress-bar"></div>
     </div>
 
+<!-- Interactive mesmerizing background -->
+<canvas id="interactive-bg" class="interactive-bg" aria-hidden="true"></canvas>
+<div class="bg-noise"></div>
+<div class="bg-vignette"></div>
+
 <!-- Holy Grail Layout -->
 <div class="app-shell">
   <!-- Sidebar (desktop) -->
@@ -120,29 +126,36 @@
 
   <!-- Main content -->
   <main class="main-content">
-<!-- hero section starts -->
-<section class="home" id="home">
-    <div class="gradient-bg"></div>
-
+<!-- hero section - Ornn-style -->
+<section class="home hero-ornn" id="home">
     <div id="particles-js"></div>
 
-    <div class="content">
-    <h2>Hi There,<br/> I'm Thayaananthan <span class="gradient-text">Kanagaraj</span></h2>
-    <p>I am an <span class="typing-text gradient-text"></span></p>
-    <a href="#about" class="btn btn-modern"><span>About Me</span>
-      <i class="fas fa-arrow-circle-down"></i>
-    </a>
-    <div class="socials">
-        <ul class="social-icons">
-          <li><a class="linkedin" aria-label="LinkedIn" href="https://www.linkedin.com/in/thayaa03/" target="_blank"><i class="fab fa-linkedin"></i></a></li> 
-          <li><a class="github" aria-label="GitHub" href="https://github.com/Thayaa21" target="_blank"><i class="fab fa-github"></i></a></li>
-          <li><a class="Gmail" aria-label="Gmail" href="mailto:thayaananthankangaraj@gmail.com?subject=&body="><i class="fab fa-google" target="_blank"></i></a></li>
-        </ul>
-      </div>
-    </div>  
-<div class="image floating pulse">
-    <img draggable="false" class="tilt" src="./assets/images/towork.png" alt="">
-</div>
+    <div class="hero-status">
+      <span class="status-dot"></span>
+      <span>AVAILABLE</span>
+    </div>
+
+    <div class="hero-content">
+      <h1 class="hero-title">
+        <span class="hero-line">AI & ML Engineer</span>
+        <span class="hero-line hero-accent">Building the Future</span>
+      </h1>
+      <p class="hero-subtitle">Thayaananthan Kanagaraj — <span class="typing-text gradient-text"></span> with a focus on LLMs, GNNs, and scalable AI systems.</p>
+      <a href="#about" class="btn btn-ornn">
+        <span>Explore</span>
+        <i class="fas fa-arrow-down"></i>
+      </a>
+    </div>
+
+    <div class="hero-visual">
+      <img draggable="false" src="./assets/images/towork.png" alt="Thayaananthan">
+    </div>
+
+    <div class="hero-socials">
+      <a href="https://www.linkedin.com/in/thayaa03/" target="_blank" aria-label="LinkedIn"><i class="fab fa-linkedin"></i></a>
+      <a href="https://github.com/Thayaa21" target="_blank" aria-label="GitHub"><i class="fab fa-github"></i></a>
+      <a href="mailto:thayaananthankangaraj@gmail.com" aria-label="Email"><i class="fas fa-envelope"></i></a>
+    </div>
 </section>
 <!-- hero section ends -->
 
@@ -407,6 +420,7 @@
 <!-- ==== ALL MAJOR JAVASCRIPT CDNS ENDS ==== -->
 
 <script src="./assets/js/script.js"></script>
+<script src="./assets/js/interactive-bg.js"></script>
 
 </body>
 </html>
