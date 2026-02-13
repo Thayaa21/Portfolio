@@ -76,52 +76,53 @@
     <link rel="stylesheet" href="/assets/css/modern-effects.css">
 </head>
 <body oncontextmenu="return false">
-    <!-- Add custom cursor elements -->
     <div class="cursor-dot" data-cursor-dot></div>
     <div class="cursor-outline" data-cursor-outline></div>
-    
-    <!-- Add scroll progress indicator -->
     <div class="scroll-progress-container">
         <div class="scroll-progress-bar"></div>
     </div>
 
-<!-- pre loader -->
-<!-- <div class="loader-container">
-  <img draggable="false" src="./assets/images/preloader.gif" alt="">
-</div> -->
+<!-- Holy Grail Layout -->
+<div class="app-shell">
+  <!-- Sidebar (desktop) -->
+  <aside class="sidebar">
+    <a href="/" class="sidebar-logo"><i class="fas fa-terminal"></i> Thayaananthan</a>
+    <nav class="sidebar-nav">
+      <a href="#home" class="active"><i class="fas fa-home"></i><span>Home</span></a>
+      <a href="#about"><i class="fas fa-user-alt"></i><span>About</span></a>
+      <a href="#skills"><i class="fas fa-laptop-code"></i><span>Skills</span></a>
+      <a href="#education"><i class="fas fa-graduation-cap"></i><span>Education</span></a>
+      <a href="#work"><i class="fas fa-folder-open"></i><span>Work</span></a>
+      <a href="#experience"><i class="fas fa-briefcase"></i><span>Experience</span></a>
+    </nav>
+    <div class="sidebar-footer">
+      <a href="https://www.linkedin.com/in/thayaa03/" target="_blank" aria-label="LinkedIn"><i class="fab fa-linkedin"></i></a>
+      <a href="https://github.com/Thayaa21" target="_blank" aria-label="GitHub"><i class="fab fa-github"></i></a>
+      <a href="mailto:thayaananthankangaraj@gmail.com" aria-label="Email"><i class="fas fa-envelope"></i></a>
+    </div>
+  </aside>
 
-<!-- navbar starts -->
-<header>
-        <a href="/" class="logo"><i class="fas fa-brain"></i> Thayaananthan</a>
+  <!-- Top bar (mobile) -->
+  <header class="header-mobile">
+    <a href="/" class="logo"><i class="fas fa-terminal"></i> Thayaananthan</a>
+    <div id="menu" class="fas fa-bars"></div>
+    <nav class="navbar">
+      <ul>
+        <li><a class="active" href="#home">Home</a></li>
+        <li><a href="#about">About</a></li>
+        <li><a href="#skills">Skills</a></li>
+        <li><a href="#education">Education</a></li>
+        <li><a href="#work">Work</a></li>
+        <li><a href="#experience">Experience</a></li>
+      </ul>
+    </nav>
+  </header>
 
-        <div id="menu" class="fas fa-bars"></div>
-        <nav class="navbar">
-            <ul>
-            <li><a class="active" href="#home">Home</a></li>
-            <li><a href="#about">About</a></li>
-            <li><a href="#skills">Skills</a></li>
-            <li><a href="#education">Education</a></li>
-            <li><a href="#work">Work</a></li>
-            <li><a href="#experience">Experience</a></li>
-            </ul>
-        </nav>
-</header>
-<!-- navbar ends -->
-
-
+  <!-- Main content -->
+  <main class="main-content">
 <!-- hero section starts -->
 <section class="home" id="home">
-    <div class="gradient-bg">
-        <svg xmlns="http://www.w3.org/2000/svg" width="100%" height="100%">
-            <defs>
-                <linearGradient id="a" x1="0%" y1="0%" x2="100%" y2="0%">
-                    <stop offset="0%" style="stop-color:#FF6B6B"/>
-                    <stop offset="100%" style="stop-color:#4ECDC4"/>
-                </linearGradient>
-            </defs>
-            <rect width="100%" height="100%" fill="url(#a)"/>
-        </svg>
-    </div>
+    <div class="gradient-bg"></div>
 
     <div id="particles-js"></div>
 
@@ -185,20 +186,12 @@
 <!-- skills section starts -->
 <section class="skills" id="skills">
 
-    <h2 class="heading"><i class="fas fa-laptop-code"></i> Tech Stacks</h2>
+    <h2 class="heading"><i class="fas fa-laptop-code"></i> Tech <span class="gradient-text">Stacks</span></h2>
+    <p class="skills-subtitle">AI · Data Science · Data Engineering · Software Engineering · Data Analysis</p>
 
-    <div class="container">
-          <div class="row" id="skillsContainer">
-
-            <!-- <div class="bar">
-              <div class="info">
-                <img src="https://img.icons8.com/color/48/000000/adobe-xd.png"/>
-                <span>AdobeXD</span>
-              </div>
-            </div> -->
-
-      </div>
-</div>
+    <div class="skills-container" id="skillsContainer">
+      <!-- Category sections rendered by script.js -->
+    </div>
 </section>
 <!-- skills section ends -->
 
@@ -325,26 +318,20 @@
         </div>
       </div>
     </div>
-  </div>
 
-  <div class="container right">
-    <div class="content">
-      <div class="tag">
-        <h2>Gramophone media lab</h2>
-      </div>
-      <div class="desc">
-          <h3>AR Intern</h3>
-          <p>August 2022 - October 2022 | Coimbatore, India</p>
-          <p>Developed AR e-brochure showcasing Vedic heritage, combining cultural storytelling with modern web and augmented reality technologies.</p>
+    <div class="container right">
+      <div class="content">
+        <div class="tag">
+          <h2>Gramophone media lab</h2>
+        </div>
+        <div class="desc">
+            <h3>AR Intern</h3>
+            <p>August 2022 - October 2022 | Coimbatore, India</p>
+            <p>Developed AR e-brochure showcasing Vedic heritage, combining cultural storytelling with modern web and augmented reality technologies.</p>
+        </div>
       </div>
     </div>
   </div>
-</div>
-
-  
-
-</div>
-
 </section>
 <!-- experience section ends -->
 
@@ -390,8 +377,10 @@
 
 <!-- scroll top btn -->
 <a href="#home" aria-label="ScrollTop" class="fas fa-angle-up" id="scroll-top"></a>
-<!-- scroll back to top -->
 
+</main>
+</div>
+<!-- app shell end -->
 
 <!-- ==== ALL MAJOR JAVASCRIPT CDNS STARTS ==== -->
 <!-- jquery cdn -->

@@ -1,114 +1,133 @@
-[
+{
+  "categories": [
     {
-        "name": "Python",
-        "icon": "https://img.icons8.com/color/48/000000/python--v1.png"
+      "id": "ai",
+      "label": "AI & Machine Learning",
+      "icon": "fa-brain",
+      "skills": [
+        {"name": "PyTorch", "icon": "assets/images/icon/pytorch.png"},
+        {"name": "JAX", "icon": "https://img.icons8.com/color/48/000000/google-logo.png"},
+        {"name": "Hugging Face", "icon": "./assets/images/icon/huggingface.svg"},
+        {"name": "PyTorch Lightning", "icon": "assets/images/icon/pytorch.png"},
+        {"name": "TensorFlow", "icon": "https://img.icons8.com/color/48/000000/tensorflow.png"},
+        {"name": "DeepSpeed", "icon": "https://img.icons8.com/color/48/000000/microsoft.png"},
+        {"name": "Ray", "icon": "https://img.icons8.com/color/48/000000/rocket.png"},
+        {"name": "LangChain", "icon": "https://img.icons8.com/color/48/000000/chain.png"},
+        {"name": "LLMs", "icon": "assets/images/icon/llm.jpg"},
+        {"name": "Vision Transformers", "icon": "https://img.icons8.com/color/48/000000/artificial-intelligence.png"},
+        {"name": "Graph Neural Networks", "icon": "assets/images/icon/graph.png"},
+        {"name": "Diffusion Models", "icon": "https://img.icons8.com/color/48/000000/artificial-intelligence.png"},
+        {"name": "Reinforcement Learning", "icon": "https://img.icons8.com/color/48/000000/rocket.png"},
+        {"name": "CUDA", "icon": "https://img.icons8.com/color/48/000000/nvidia.png"},
+        {"name": "TensorBoard", "icon": "https://img.icons8.com/color/48/000000/tensorflow.png"},
+        {"name": "Weights & Biases", "icon": "https://img.icons8.com/color/48/000000/chart.png"}
+      ]
     },
     {
-        "name": "R Programming",
-        "icon": "https://img.icons8.com/external-tal-revivo-shadow-tal-revivo/48/000000/external-r-project-a-free-software-environment-for-statistical-computing-and-graphics-logo-shadow-tal-revivo.png"
+      "id": "de",
+      "label": "Data Engineering",
+      "icon": "fa-database",
+      "skills": [
+        {"name": "Apache Spark", "icon": "https://img.icons8.com/color/48/000000/apache-spark.png"},
+        {"name": "PySpark", "icon": "https://img.icons8.com/color/48/000000/apache-spark.png"},
+        {"name": "Kafka", "icon": "https://img.icons8.com/color/48/000000/apache-kafka.png"},
+        {"name": "Flink", "icon": "https://img.icons8.com/color/48/000000/connection.png"},
+        {"name": "Hadoop", "icon": "https://img.icons8.com/color/48/000000/hadoop-distributed-file-system.png"},
+        {"name": "Airflow", "icon": "https://img.icons8.com/color/48/000000/airflow.png"},
+        {"name": "dbt", "icon": "https://img.icons8.com/color/48/000000/database.png"},
+        {"name": "Prefect", "icon": "https://img.icons8.com/color/48/000000/database.png"},
+        {"name": "Dagster", "icon": "https://img.icons8.com/color/48/000000/database.png"},
+        {"name": "Snowflake", "icon": "https://img.icons8.com/color/48/000000/snowflake.png"},
+        {"name": "Databricks", "icon": "https://img.icons8.com/color/48/000000/databricks.png"},
+        {"name": "Delta Lake", "icon": "https://img.icons8.com/color/48/000000/database.png"},
+        {"name": "ETL/ELT", "icon": "https://img.icons8.com/color/48/000000/data-transfer.png"},
+        {"name": "Data Modeling", "icon": "https://img.icons8.com/color/48/000000/database-schema.png"},
+        {"name": "Stream Processing", "icon": "https://img.icons8.com/color/48/000000/connection.png"}
+      ]
     },
     {
-        "name": "C++",
-        "icon": "https://img.icons8.com/color/48/000000/c-plus-plus-logo.png"
+      "id": "ds",
+      "label": "Data Science",
+      "icon": "fa-chart-line",
+      "skills": [
+        {"name": "scikit-learn", "icon": "assets/images/icon/sckit.png"},
+        {"name": "XGBoost", "icon": "https://img.icons8.com/color/48/000000/chart.png"},
+        {"name": "LightGBM", "icon": "https://img.icons8.com/color/48/000000/chart.png"},
+        {"name": "CatBoost", "icon": "https://img.icons8.com/color/48/000000/chart.png"},
+        {"name": "Pandas", "icon": "https://img.icons8.com/color/48/000000/pandas.png"},
+        {"name": "NumPy", "icon": "https://img.icons8.com/color/48/000000/numpy.png"},
+        {"name": "SciPy", "icon": "https://img.icons8.com/color/48/000000/python--v1.png"},
+        {"name": "Statsmodels", "icon": "https://img.icons8.com/color/48/000000/chart.png"},
+        {"name": "Feature Engineering", "icon": "https://img.icons8.com/color/48/000000/light.png"},
+        {"name": "MLflow", "icon": "https://img.icons8.com/color/48/000000/deployment.png"},
+        {"name": "SHAP", "icon": "https://img.icons8.com/color/48/000000/light.png"},
+        {"name": "Causal Inference", "icon": "https://img.icons8.com/color/48/000000/statistics.png"},
+        {"name": "A/B Testing", "icon": "https://img.icons8.com/color/48/000000/statistics.png"},
+        {"name": "Time-Series", "icon": "https://img.icons8.com/color/48/000000/line-chart.png"},
+        {"name": "Recommender Systems", "icon": "https://img.icons8.com/color/48/000000/recommendation.png"},
+        {"name": "Anomaly Detection", "icon": "https://img.icons8.com/color/48/000000/warning-shield.png"}
+      ]
     },
     {
-        "name": "Bash",
-        "icon": "https://img.icons8.com/color/48/000000/bash.png"
+      "id": "se",
+      "label": "Software Engineering",
+      "icon": "fa-code",
+      "skills": [
+        {"name": "Python", "icon": "https://img.icons8.com/color/48/000000/python--v1.png"},
+        {"name": "C++", "icon": "https://img.icons8.com/color/48/000000/c-plus-plus-logo.png"},
+        {"name": "Go", "icon": "https://img.icons8.com/color/48/000000/golang.png"},
+        {"name": "Rust", "icon": "https://img.icons8.com/external-tal-revivo-shadow-tal-revivo/48/000000/external-rust-is-a-multi-paradigm-programming-language-logo-shadow-tal-revivo.png"},
+        {"name": "Java", "icon": "https://img.icons8.com/color/48/000000/java-coffee-cup-logo.png"},
+        {"name": "Scala", "icon": "https://img.icons8.com/color/48/000000/scala.png"},
+        {"name": "JavaScript", "icon": "https://img.icons8.com/color/48/000000/javascript.png"},
+        {"name": "TypeScript", "icon": "https://img.icons8.com/color/48/000000/typescript.png"},
+        {"name": "FastAPI", "icon": "https://img.icons8.com/color/48/000000/python--v1.png"},
+        {"name": "Flask", "icon": "https://img.icons8.com/color/48/000000/python--v1.png"},
+        {"name": "REST APIs", "icon": "https://img.icons8.com/color/48/000000/api.png"},
+        {"name": "GraphQL", "icon": "https://img.icons8.com/color/48/000000/graphql.png"},
+        {"name": "Docker", "icon": "https://img.icons8.com/color/48/000000/docker.png"},
+        {"name": "Kubernetes", "icon": "https://img.icons8.com/color/48/000000/kubernetes.png"},
+        {"name": "Terraform", "icon": "https://img.icons8.com/color/48/000000/terraform.png"},
+        {"name": "CI/CD", "icon": "https://img.icons8.com/color/48/000000/deployment.png"},
+        {"name": "Git", "icon": "https://img.icons8.com/color/48/000000/git.png"}
+      ]
     },
     {
-        "name": "SQL",
-        "icon": "https://img.icons8.com/color/48/000000/sql.png"
+      "id": "da",
+      "label": "Data Analysis & BI",
+      "icon": "fa-chart-bar",
+      "skills": [
+        {"name": "SQL", "icon": "https://img.icons8.com/color/48/000000/sql.png"},
+        {"name": "PostgreSQL", "icon": "https://img.icons8.com/color/48/000000/postgreesql.png"},
+        {"name": "Tableau", "icon": "https://img.icons8.com/color/48/000000/tableau-software.png"},
+        {"name": "Power BI", "icon": "https://img.icons8.com/color/48/000000/power-bi.png"},
+        {"name": "Looker", "icon": "https://img.icons8.com/color/48/000000/google-logo.png"},
+        {"name": "Matplotlib", "icon": "https://img.icons8.com/color/48/000000/python--v1.png"},
+        {"name": "Seaborn", "icon": "https://img.icons8.com/color/48/000000/python--v1.png"},
+        {"name": "Plotly", "icon": "https://img.icons8.com/color/48/000000/chart.png"},
+        {"name": "EDA", "icon": "https://img.icons8.com/color/48/000000/magnifying-glass.png"},
+        {"name": "Cohort Analysis", "icon": "https://img.icons8.com/color/48/000000/statistics.png"},
+        {"name": "A/B Testing", "icon": "https://img.icons8.com/color/48/000000/statistics.png"},
+        {"name": "Excel", "icon": "https://img.icons8.com/color/48/000000/microsoft-excel.png"}
+      ]
     },
     {
-        "name": "PyTorch",
-        "icon": "assets/images/icon/pytorch.png"
-    },
-    {
-        "name": "TensorFlow",
-        "icon": "https://img.icons8.com/color/48/000000/tensorflow.png"
-    },
-    {
-        "name": "Scikit-learn",
-        "icon": "assets/images/icon/sckit.png"
-    },
-    {
-        "name": "Hugging Face",
-        "icon": "./assets/images/icon/huggingface.svg"
-    },
-    {
-        "name": "LangChain",
-        "icon": "https://img.icons8.com/color/48/000000/chain.png"
-    },
-    {
-        "name": "CrewAI",
-        "icon": "https://img.icons8.com/color/48/000000/artificial-intelligence.png"
-    },
-    {
-        "name": "Prompt Engineering",
-        "icon": "https://img.icons8.com/color/48/000000/light.png"
-    },
-    {
-        "name": "Pandas",
-        "icon": "https://img.icons8.com/color/48/000000/pandas.png"
-    },
-    {
-        "name": "NumPy",
-        "icon": "https://img.icons8.com/color/48/000000/numpy.png"
-    },
-    {
-        "name": "Power BI",
-        "icon": "https://img.icons8.com/color/48/000000/power-bi.png"
-    },
-    {
-        "name": "AWS Lambda",
-        "icon": "https://img.icons8.com/color/48/000000/amazon-web-services.png"
-    },
-    {
-        "name": "AWS EC2",
-        "icon": "https://img.icons8.com/color/48/000000/amazon-web-services.png"
-    },
-    {
-        "name": "GCP Vertex AI",
-        "icon": "https://img.icons8.com/color/48/000000/google-cloud.png"
-    },
-    {
-        "name": "Docker",
-        "icon": "https://img.icons8.com/color/48/000000/docker.png"
-    },
-    {
-        "name": "CI/CD",
-        "icon": "https://img.icons8.com/color/48/000000/deployment.png"
-    },
-    {
-        "name": "Large Language Models",
-        "icon": "assets/images/icon/llm.jpg"
-    },
-    {
-        "name": "Explainable AI",
-        "icon": "https://img.icons8.com/color/48/000000/light.png"
-    },
-    {
-        "name": "Computer Vision",
-        "icon": "https://img.icons8.com/color/48/000000/video-conference.png"
-    },
-    {
-        "name": "Natural Language Processing",
-        "icon": "https://img.icons8.com/color/48/000000/language.png"
-    },
-    {
-        "name": "Graph Neural Networks",
-        "icon": "assets/images/icon/graph.png"
-    },
-    {
-        "name": "MLOps",
-        "icon": "https://img.icons8.com/color/48/000000/deployment.png"
-    },
-    {
-        "name": "Git",
-        "icon": "https://img.icons8.com/color/48/000000/git.png"
-    },
-    {
-        "name": "GitHub",
-        "icon": "https://img.icons8.com/glyph-neue/48/000000/github.png"
+      "id": "cloud",
+      "label": "Cloud & Infrastructure",
+      "icon": "fa-cloud",
+      "skills": [
+        {"name": "AWS", "icon": "https://img.icons8.com/color/48/000000/amazon-web-services.png"},
+        {"name": "SageMaker", "icon": "https://img.icons8.com/color/48/000000/amazon-web-services.png"},
+        {"name": "GCP Vertex AI", "icon": "https://img.icons8.com/color/48/000000/google-cloud.png"},
+        {"name": "BigQuery", "icon": "https://img.icons8.com/color/48/000000/google-cloud.png"},
+        {"name": "Redshift", "icon": "https://img.icons8.com/color/48/000000/amazon-web-services.png"},
+        {"name": "MongoDB", "icon": "https://img.icons8.com/color/48/000000/mongodb.png"},
+        {"name": "Redis", "icon": "https://img.icons8.com/color/48/000000/redis.png"},
+        {"name": "Elasticsearch", "icon": "https://img.icons8.com/color/48/000000/elasticsearch.png"},
+        {"name": "FAISS", "icon": "https://img.icons8.com/color/48/000000/facebook.png"},
+        {"name": "Pinecone", "icon": "https://img.icons8.com/color/48/000000/database.png"},
+        {"name": "Bash", "icon": "https://img.icons8.com/color/48/000000/bash.png"}
+      ]
     }
-]
+  ]
+}

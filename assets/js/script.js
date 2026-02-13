@@ -15,7 +15,7 @@ $(document).ready(function () {
             document.querySelector('#scroll-top').classList.remove('active');
         }
 
-        // scroll spy
+        // scroll spy - update sidebar + mobile nav
         $('section').each(function () {
             let height = $(this).height();
             let offset = $(this).offset().top - 200;
@@ -23,18 +23,27 @@ $(document).ready(function () {
             let id = $(this).attr('id');
 
             if (top > offset && top < offset + height) {
-                $('.navbar ul li a').removeClass('active');
-                $('.navbar').find(`[href="#${id}"]`).addClass('active');
+                $('.sidebar-nav a, .navbar ul li a').removeClass('active');
+                $(`.sidebar-nav a[href="#${id}"], .navbar a[href="#${id}"]`).addClass('active');
             }
         });
     });
 
     // smooth scrolling
-    $('a[href*="#"]').on('click', function (e) {
-        e.preventDefault();
-        $('html, body').animate({
-            scrollTop: $($(this).attr('href')).offset().top,
-        }, 500, 'linear')
+    $('a[href*="#"]').not('[href="#"]').on('click', function (e) {
+        var target = $(this).attr('href');
+        if (!target || target === '#') return;
+        var $target = $(target);
+        if ($target.length) {
+            e.preventDefault();
+            $('html, body').animate({
+                scrollTop: $target.offset().top
+            }, 800, 'swing');
+            if ($('#menu').length) {
+                $('#menu').removeClass('fa-times');
+                $('.navbar').removeClass('nav-toggle');
+            }
+        }
     });
 
     // <!-- emailjs to mail contact form data -->
@@ -89,19 +98,27 @@ async function fetchData(type = "skills") {
     return data;
 }
 
-function showSkills(skills) {
-    let skillsContainer = document.getElementById("skillsContainer");
-    let skillHTML = "";
-    skills.forEach(skill => {
-        skillHTML += `
-        <div class="bar">
-              <div class="info">
-                <img src=${skill.icon} alt="skill" />
-                <span>${skill.name}</span>
-              </div>
-            </div>`
+function showSkills(data) {
+    const skillsContainer = document.getElementById("skillsContainer");
+    if (!data.categories) {
+        // Legacy flat format fallback
+        let skillHTML = '<div class="skills-row"><div class="skills-grid">';
+        (Array.isArray(data) ? data : []).forEach(skill => {
+            skillHTML += `<div class="bar"><div class="info"><img src="${skill.icon}" alt="${skill.name}" /><span>${skill.name}</span></div></div>`;
+        });
+        skillHTML += '</div></div>';
+        skillsContainer.innerHTML = skillHTML;
+        return;
+    }
+    let html = "";
+    data.categories.forEach(cat => {
+        html += `<div class="skills-category"><h3 class="skills-category-title"><i class="fas ${cat.icon}"></i> ${cat.label}</h3><div class="skills-grid">`;
+        cat.skills.forEach(skill => {
+            html += `<div class="bar"><div class="info"><img src="${skill.icon}" alt="${skill.name}" onerror="this.src='https://img.icons8.com/color/48/000000/code.png'" /><span>${skill.name}</span></div></div>`;
+        });
+        html += '</div></div>';
     });
-    skillsContainer.innerHTML = skillHTML;
+    skillsContainer.innerHTML = html;
 }
 
 function showProjects(projects) {
@@ -193,10 +210,11 @@ document.onkeydown = function (e) {
 
 /* ===== SCROLL REVEAL ANIMATION ===== */
 const srtop = ScrollReveal({
-    origin: 'top',
-    distance: '80px',
-    duration: 1000,
-    reset: true
+    origin: 'bottom',
+    distance: '40px',
+    duration: 800,
+    easing: 'ease-out',
+    reset: false
 });
 
 /* SCROLL HOME */
@@ -221,8 +239,8 @@ srtop.reveal('.about .content .resumebtn', { delay: 200 });
 
 
 /* SCROLL SKILLS */
-srtop.reveal('.skills .container', { interval: 200 });
-srtop.reveal('.skills .container .bar', { delay: 400 });
+srtop.reveal('.skills-container', { delay: 200 });
+srtop.reveal('.skills .bar', { interval: 50, delay: 300 });
 
 /* SCROLL EDUCATION */
 srtop.reveal('.education .box', { interval: 200 });

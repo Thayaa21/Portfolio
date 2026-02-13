@@ -1,46 +1,34 @@
+/* Framer-style scroll & gradients */
+
 .gradient-bg {
-    position: absolute;
-    top: 0;
-    left: 0;
-    width: 100%;
-    height: 100%;
-    z-index: -1;
-    overflow: hidden;
-}
-
-.gradient-bg svg {
-    animation: gradientShift 15s ease infinite;
-}
-
-@keyframes gradientShift {
-    0% { transform: scale(1.5) rotate(0deg); }
-    50% { transform: scale(2) rotate(180deg); }
-    100% { transform: scale(1.5) rotate(360deg); }
+  position: absolute;
+  inset: 0;
+  z-index: -1;
 }
 
 .floating {
-    animation: float 6s ease-in-out infinite;
+  animation: float 6s cubic-bezier(0.4, 0, 0.2, 1) infinite;
 }
 
 @keyframes float {
-    0% { transform: translateY(0px); }
-    50% { transform: translateY(-20px); }
-    100% { transform: translateY(0px); }
+  0%, 100% { transform: translateY(0); }
+  50% { transform: translateY(-16px); }
 }
 
 .scroll-progress-container {
-    position: fixed;
-    top: 0;
-    left: 0;
-    width: 100%;
-    height: 4px;
-    background: rgba(255, 255, 255, 0.1);
-    z-index: 9999;
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 3px;
+  background: rgba(255, 255, 255, 0.04);
+  z-index: 9999;
 }
 
 .scroll-progress-bar {
-    height: 100%;
-    background: linear-gradient(90deg, #FF6B6B, #4ECDC4);
-    width: 0%;
-    transition: width 0.2s ease;
-} 
+  height: 100%;
+  width: 0%;
+  background: linear-gradient(90deg, #00fff7, #00d9ff);
+  border-radius: 0 2px 2px 0;
+  transition: width 0.15s cubic-bezier(0.4, 0, 0.2, 1);
+}
