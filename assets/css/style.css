@@ -736,6 +736,31 @@ section {
   transform: translateY(-2px);
 }
 
+.starred-section {
+  margin-top: 3rem;
+}
+
+.starred-section .content .tag {
+  display: flex;
+  align-items: baseline;
+  flex-wrap: wrap;
+  gap: 0.5rem;
+}
+
+.starred-meta {
+  font-size: 1rem;
+  color: var(--text-muted);
+  font-weight: 400;
+}
+
+.starred-empty {
+  text-align: center;
+  color: var(--text-muted);
+  font-size: 1.4rem;
+  padding: 3rem 2rem;
+  grid-column: 1 / -1;
+}
+
 /* ========== EXPERIENCE - Ornn-style ========== */
 .experience {
   background: rgba(255, 255, 255, 0.02);

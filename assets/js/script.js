@@ -170,6 +170,54 @@ fetchData("projects").then(data => {
     showProjects(data);
 });
 
+async function fetchStarredRepos() {
+    try {
+        const res = await fetch("starred-repos.json");
+        const data = await res.json();
+        return Array.isArray(data) ? data : [];
+    } catch (e) {
+        console.warn("Could not load starred repos:", e);
+        return [];
+    }
+}
+
+function showStarredRepos(repos) {
+    const container = document.getElementById("starredContainer");
+    if (!container) return;
+    if (!repos.length) {
+        container.innerHTML = '<p class="starred-empty">Star some repos on GitHub — they’ll show up here once the workflow runs.</p>';
+        return;
+    }
+    let html = "";
+    repos.slice(0, 12).forEach(repo => {
+        const desc = (repo.desc || "No description").slice(0, 120) + (repo.desc && repo.desc.length > 120 ? "…" : "");
+        const imgSrc = repo.image || `https://placehold.co/400x200/1a1a1a/dab982?text=${encodeURIComponent(repo.name)}`;
+        html += `
+        <div class="box tilt starred-box">
+          <img draggable="false" src="${imgSrc}" alt="${repo.name}" onerror="this.src='https://placehold.co/400x200/1a1a1a/dab982?text=Repo'" />
+          <div class="content">
+            <div class="tag">
+              <h3>${repo.name}</h3>
+              <span class="starred-meta">${repo.language} · ${repo.stars} ★</span>
+            </div>
+            <div class="desc">
+              <p>${desc}</p>
+              <div class="btns">
+                <a href="${repo.url}" class="btn" target="_blank" rel="noopener"><i class="fab fa-github"></i> View</a>
+              </div>
+            </div>
+          </div>
+        </div>`;
+    });
+    container.innerHTML = html;
+
+    VanillaTilt.init(document.querySelectorAll(".starred-box"), { max: 15 });
+    const srtop = ScrollReveal({ origin: 'top', distance: '80px', duration: 1000, reset: true });
+    srtop.reveal('.starred-section .box', { interval: 200 });
+}
+
+fetchStarredRepos().then(showStarredRepos);
+
 // <!-- tilt js effect starts -->
 VanillaTilt.init(document.querySelectorAll(".tilt"), {
     max: 15,
