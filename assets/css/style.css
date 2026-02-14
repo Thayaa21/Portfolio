@@ -3,7 +3,7 @@
    Glass · Transparent · Smooth Transitions
    ======================================== */
 
-@import url("https://fonts.googleapis.com/css2?family=Syne:wght@400;500;600;700;800&family=Inter:wght@300;400;500;600&display=swap");
+@import url("https://fonts.googleapis.com/css2?family=Orbitron:wght@400;500;600;700&family=Rajdhani:wght@300;400;500;600;700&family=Inter:wght@300;400;500&display=swap");
 
 :root {
   --bg-deep: #050508;
@@ -47,8 +47,9 @@ html {
 
 body {
   background: var(--bg-deep);
-  font-family: "Inter", -apple-system, BlinkMacSystemFont, sans-serif;
+  font-family: "Rajdhani", "Inter", sans-serif;
   color: var(--text-primary);
+  letter-spacing: 0.02em;
 }
 
 *::selection {
@@ -98,11 +99,14 @@ html::-webkit-scrollbar-thumb {
 }
 
 .sidebar-logo {
-  font-size: 1.6rem;
-  font-weight: 700;
-  color: var(--accent-cyan);
+  font-family: "Orbitron", sans-serif;
+  font-size: 1.5rem;
+  font-weight: 600;
+  color: var(--accent-gold);
   margin-bottom: 3rem;
+  letter-spacing: 0.08em;
   transition: opacity 0.3s var(--ease-in-out);
+  text-shadow: 0 0 24px rgba(218, 185, 130, 0.15);
 }
 
 .sidebar-logo:hover {
@@ -121,11 +125,14 @@ html::-webkit-scrollbar-thumb {
 }
 
 .sidebar-nav a {
+  font-family: "Rajdhani", sans-serif;
   display: flex;
   align-items: center;
   gap: 1rem;
   padding: 1rem 1.2rem;
   font-size: 1.35rem;
+  font-weight: 500;
+  letter-spacing: 0.04em;
   color: var(--text-secondary);
   border-radius: var(--radius-sm);
   transition: all 0.3s var(--ease-in-out);
@@ -142,8 +149,9 @@ html::-webkit-scrollbar-thumb {
 }
 
 .sidebar-nav a.active {
-  color: var(--accent-cyan);
+  color: var(--accent-gold);
   background: rgba(218, 185, 130, 0.06);
+  text-shadow: 0 0 16px rgba(218, 185, 130, 0.2);
 }
 
 .sidebar-footer {
@@ -165,7 +173,7 @@ html::-webkit-scrollbar-thumb {
 }
 
 .sidebar-footer a:hover {
-  color: var(--accent-cyan);
+  color: var(--accent-gold);
   background: rgba(218, 185, 130, 0.06);
 }
 
@@ -208,13 +216,15 @@ section {
 }
 
 .heading {
-  font-family: "Syne", sans-serif;
+  font-family: "Orbitron", sans-serif;
   font-size: 2.2rem;
   font-weight: 600;
   color: var(--text-primary);
   text-align: center;
   margin-bottom: 2.5rem;
-  letter-spacing: -0.02em;
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+  text-shadow: 0 0 30px rgba(218, 185, 130, 0.12);
 }
 
 .heading::after {
@@ -247,23 +257,18 @@ section {
   padding: 8rem 8% 6rem;
 }
 
-.hero-ornn #particles-js {
-  position: absolute;
-  inset: 0;
-  z-index: 0;
-  opacity: 0.6;
-}
-
 .hero-status {
   grid-column: 1;
   display: flex;
   align-items: center;
   gap: 0.6rem;
-  font-size: 1rem;
+  font-family: "Orbitron", sans-serif;
+  font-size: 0.95rem;
   font-weight: 500;
-  letter-spacing: 0.12em;
+  letter-spacing: 0.2em;
   color: var(--accent-gold);
   text-transform: uppercase;
+  text-shadow: 0 0 20px rgba(218, 185, 130, 0.2);
 }
 
 .status-dot {
@@ -286,12 +291,14 @@ section {
 }
 
 .hero-title {
-  font-family: "Syne", sans-serif;
+  font-family: "Orbitron", sans-serif;
   font-size: clamp(2.4rem, 4vw, 3.2rem);
   font-weight: 600;
   line-height: 1.2;
-  letter-spacing: -0.02em;
+  letter-spacing: 0.04em;
   margin-bottom: 1.5rem;
+  text-transform: uppercase;
+  text-shadow: 0 0 40px rgba(218, 185, 130, 0.15);
 }
 
 .hero-line {
@@ -303,11 +310,16 @@ section {
   -webkit-background-clip: text;
   -webkit-text-fill-color: transparent;
   background-clip: text;
+  text-shadow: none;
+  filter: drop-shadow(0 0 24px rgba(218, 185, 130, 0.2));
 }
 
 .hero-subtitle {
-  font-size: 1.35rem;
+  font-family: "Rajdhani", sans-serif;
+  font-size: 1.4rem;
+  font-weight: 500;
   color: var(--text-secondary);
+  letter-spacing: 0.03em;
   line-height: 1.65;
   max-width: 440px;
   margin-bottom: 2rem;
@@ -315,18 +327,21 @@ section {
 }
 
 .btn-ornn {
+  font-family: "Orbitron", sans-serif;
   display: inline-flex;
   align-items: center;
   gap: 0.6rem;
   padding: 1rem 2rem;
-  font-size: 1.2rem;
+  font-size: 1.15rem;
   font-weight: 500;
   color: var(--bg-deep);
   background: var(--accent-gold);
   border-radius: var(--radius-sm);
   transition: all 0.4s var(--ease-out-expo);
   cursor: pointer;
-  letter-spacing: 0.03em;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  box-shadow: 0 0 24px rgba(218, 185, 130, 0.2);
 }
 
 .btn-ornn:hover {
@@ -436,12 +451,15 @@ section {
 }
 
 .about .row .content h3 {
+  font-family: "Orbitron", sans-serif;
   font-size: 1.9rem;
   font-weight: 600;
   margin-bottom: 0.5rem;
+  letter-spacing: 0.04em;
 }
 
 .about .row .content .tag {
+  font-family: "Rajdhani", sans-serif;
   font-size: 1.2rem;
   color: var(--accent-cyan);
   font-weight: 600;
@@ -519,12 +537,16 @@ section {
 }
 
 .skills-category-title {
-  font-size: 1.4rem;
-  color: var(--accent-cyan);
+  font-family: "Orbitron", sans-serif;
+  font-size: 1.3rem;
+  font-weight: 600;
+  letter-spacing: 0.06em;
+  color: var(--accent-gold);
   margin-bottom: 1rem;
   display: flex;
   align-items: center;
   gap: 0.6rem;
+  text-transform: uppercase;
 }
 
 .skills-grid {
@@ -789,8 +811,11 @@ section {
 }
 
 .experience .content .tag h2 {
-  font-size: 1.4rem;
-  color: var(--accent-cyan);
+  font-family: "Orbitron", sans-serif;
+  font-size: 1.35rem;
+  font-weight: 600;
+  letter-spacing: 0.04em;
+  color: var(--accent-gold);
 }
 
 .experience .content .desc h3 {
@@ -820,9 +845,13 @@ section {
 }
 
 .footer .box-container .box h3 {
-  font-size: 1.6rem;
-  color: var(--accent-cyan);
+  font-family: "Orbitron", sans-serif;
+  font-size: 1.5rem;
+  font-weight: 600;
+  letter-spacing: 0.06em;
+  color: var(--accent-gold);
   margin-bottom: 1rem;
+  text-transform: uppercase;
 }
 
 .footer .box-container .box p,

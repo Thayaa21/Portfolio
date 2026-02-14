@@ -83,8 +83,9 @@
         <div class="scroll-progress-bar"></div>
     </div>
 
-<!-- Interactive mesmerizing background -->
-<canvas id="interactive-bg" class="interactive-bg" aria-hidden="true"></canvas>
+<!-- Background: wave + ambient layers -->
+<div class="bg-wave" aria-hidden="true"></div>
+<div class="bg-ambient"></div>
 <div class="bg-noise"></div>
 <div class="bg-vignette"></div>
 
@@ -126,29 +127,29 @@
 
   <!-- Main content -->
   <main class="main-content">
-<!-- hero section - Ornn-style -->
+<!-- hero section -->
 <section class="home hero-ornn" id="home">
-    <div id="particles-js"></div>
-
     <div class="hero-status">
       <span class="status-dot"></span>
       <span>AVAILABLE</span>
     </div>
 
     <div class="hero-content">
-      <h1 class="hero-title">
-        <span class="hero-line">AI & ML Engineer</span>
-        <span class="hero-line hero-accent">Building the Future</span>
+      <h1 class="hero-title hero-reveal">
+        <span class="hero-line hero-line-1">AI & ML Engineer</span>
+        <span class="hero-line hero-line-2 hero-accent">Building the Future</span>
       </h1>
-      <p class="hero-subtitle">Thayaananthan Kanagaraj — <span class="typing-text gradient-text"></span> with a focus on LLMs, GNNs, and scalable AI systems.</p>
-      <a href="#about" class="btn btn-ornn">
+      <p class="hero-subtitle hero-reveal"><span class="hero-name">Thayaananthan Kanagaraj</span> — <span class="typing-text gradient-text"></span> with 2+ years experience. Focus on LLMs, GNNs, and scalable AI systems.</p>
+      <a href="#about" class="btn btn-ornn hero-reveal hero-btn-reveal">
         <span>Explore</span>
         <i class="fas fa-arrow-down"></i>
       </a>
     </div>
 
-    <div class="hero-visual">
-      <img draggable="false" src="./assets/images/towork.png" alt="Thayaananthan">
+    <div class="hero-visual hero-reveal">
+      <div class="hero-image-frame">
+        <img draggable="false" src="./assets/images/towork.png" alt="Thayaananthan">
+      </div>
     </div>
 
     <div class="hero-socials">
@@ -171,7 +172,7 @@
     </div>
     <div class="content">
         <h3>I'm Thayaananthan Kanagaraj</h3>
-        <span class="tag gradient-text">AI/ML Engineer & Data Scientist</span>
+        <span class="tag gradient-text">AI/ML Engineer · Data Engineer · Software Engineer · Data Analyst with 2+ years</span>
         
         <p>I am an AI/ML Engineer and Data Scientist with a strong focus on building scalable, high-impact AI systems. Currently pursuing a Master’s in Robotics and Artificial Intelligence at Arizona State University, where I also serve as a Research Assistant working on agent-based models translated into Graph Neural Network (GNN) frameworks for complex system modeling. I bring hands-on experience in applying Machine Learning, Deep Learning, Natural Language Processing, Computer Vision, Explainable AI, and Multi-Agent Systems to real-world problems.
 
@@ -402,10 +403,6 @@
 <!-- typed.js cdn -->
 <script src="https://cdnjs.cloudflare.com/ajax/libs/typed.js/2.0.5/typed.min.js" integrity="sha512-1KbKusm/hAtkX5FScVR5G36wodIMnVd/aP04af06iyQTkD17szAMGNmxfNH+tEuFp3Og/P5G32L1qEC47CZbUQ==" crossorigin="anonymous" referrerpolicy="no-referrer"></script>
 
-<!-- particle.js links -->
-<script src="./assets/js/particles.min.js"></script>
-<script src="./assets/js/app.js"></script>
-
 <!-- vanilla tilt.js links -->
 <script src="https://cdnjs.cloudflare.com/ajax/libs/vanilla-tilt/1.7.0/vanilla-tilt.min.js" integrity="sha512-SttpKhJqONuBVxbRcuH0wezjuX+BoFoli0yPsnrAADcHsQMW8rkR84ItFHGIkPvhnlRnE2FaifDOUw+EltbuHg==" crossorigin="anonymous" referrerpolicy="no-referrer"></script>
 
@@ -420,7 +417,7 @@
 <!-- ==== ALL MAJOR JAVASCRIPT CDNS ENDS ==== -->
 
 <script src="./assets/js/script.js"></script>
-<script src="./assets/js/interactive-bg.js"></script>
+<script src="./assets/js/cursor.js"></script>
 
 </body>
 </html>

@@ -80,7 +80,7 @@ document.addEventListener('visibilitychange',
 
 // <!-- typed js effect starts -->
 var typed = new Typed(".typing-text", {
-    strings: ["AI/ML Engineer", "Data Scientist"],
+    strings: ["AI/ML Engineer", "Data Engineer", "Software Engineer", "Data Analyst", "Data Scientist"],
     loop: true,
     typeSpeed: 75,
     backSpeed: 25,
@@ -217,11 +217,7 @@ const srtop = ScrollReveal({
     reset: false
 });
 
-/* SCROLL HOME */
-srtop.reveal('.hero-title', { delay: 200 });
-srtop.reveal('.hero-subtitle', { delay: 300 });
-srtop.reveal('.hero-content .btn-ornn', { delay: 400 });
-srtop.reveal('.hero-visual', { delay: 500 });
+/* SCROLL HOME — hero uses custom sci-fi entry animations */
 
 /* SCROLL ABOUT */
 srtop.reveal('.about .content h3', { delay: 200 });
