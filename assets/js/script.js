@@ -172,7 +172,7 @@ fetchData("projects").then(data => {
 
 async function fetchStarredRepos() {
     try {
-        const res = await fetch("starred-repos.json");
+        const res = await fetch("./starred-repos.json");
         const data = await res.json();
         return Array.isArray(data) ? data : [];
     } catch (e) {
