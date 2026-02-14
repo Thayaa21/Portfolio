@@ -1,5 +1,8 @@
 name: Update Starred Repos
 
+permissions:
+  contents: write   # Allow pushing commits
+
 on:
   schedule:
     - cron: '0 */6 * * *'   # Every 6 hours
