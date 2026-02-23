@@ -37,12 +37,13 @@
     }
   },
   {
-    "name": "AI-Enabled Drug Repurposing Platform",
-    "desc": "End-to-end pipeline integrating omics features and literature embeddings for oncology drug repurposing. Uses GNNs for cell line-drug interaction modeling and BioGPT+SciNCL for mechanism reasoning.",
-    "image": "drug",
+    "name": "CRM Agent — CX Intelligence",
+    "desc": "Agentic AI system that monitors CX data (tickets, reviews, NPS), detects anomalies, investigates root cause, and produces alerts and actions. FastAPI + LangGraph + ChromaDB + React.",
+    "image": "researchanalysis",
     "category": "ai-ml",
     "links": {
-      "view": "https://github.com/Thayaa21"
+      "view": "https://crm-agent-1bpr.onrender.com/",
+      "code": "https://github.com/Thayaa21/crm_agent"
     }
   },
   {
