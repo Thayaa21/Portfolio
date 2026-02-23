@@ -124,13 +124,20 @@ function showSkills(data) {
 function showProjects(projects) {
     let projectsContainer = document.querySelector("#work .box-container");
     let projectHTML = "";
-    projects.slice(0, 10).filter(project => project.category != "android").forEach(project => {
+    const sorted = [...projects]
+        .filter(project => project.category != "android")
+        .sort((a, b) => (b.featured ? 1 : 0) - (a.featured ? 1 : 0));
+    sorted.slice(0, 10).forEach(project => {
+        const featuredBadge = project.featured
+            ? `<span class="project-badge"><i class="fas fa-star"></i> Try my new project demo</span>`
+            : '';
         projectHTML += `
-        <div class="box tilt">
+        <div class="box tilt ${project.featured ? 'box-featured' : ''}">
+      ${featuredBadge}
       <img draggable="false" src="/assets/images/projects/${project.image}.png" alt="project" />
       <div class="content">
         <div class="tag">
-        <h3>${project.name}</h3>
+        <h3>${project.featured ? '<i class="fas fa-star"></i> ' : ''}${project.name}</h3>
         </div>
         <div class="desc">
           <p>${project.desc}</p>

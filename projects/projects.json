@@ -1,5 +1,15 @@
 [
-  
+  {
+    "name": "CRM Agent — CX Intelligence",
+    "desc": "Agentic AI system that monitors CX data (tickets, reviews, NPS), detects anomalies, investigates root cause, and produces alerts and actions. FastAPI + LangGraph + ChromaDB + React.",
+    "image": "researchanalysis",
+    "category": "ai-ml",
+    "featured": true,
+    "links": {
+      "view": "https://crm-agent-1bpr.onrender.com/",
+      "code": "https://github.com/Thayaa21/crm_agent"
+    }
+  },
   {
     "name": "Citation-Aware Multimodal Research Analysis",
     "desc": "Developed an AI-powered system for extracting, analyzing, and synthesizing knowledge from PDFs, citation mapping, similarity search, and a Streamlit interface.",
@@ -34,16 +44,6 @@
     "category": "ai-ml",
     "links": {
       "view": "https://github.com/Thayaa21/life_copilot"
-    }
-  },
-  {
-    "name": "CRM Agent — CX Intelligence",
-    "desc": "Agentic AI system that monitors CX data (tickets, reviews, NPS), detects anomalies, investigates root cause, and produces alerts and actions. FastAPI + LangGraph + ChromaDB + React.",
-    "image": "researchanalysis",
-    "category": "ai-ml",
-    "links": {
-      "view": "https://crm-agent-1bpr.onrender.com/",
-      "code": "https://github.com/Thayaa21/crm_agent"
     }
   },
   {
