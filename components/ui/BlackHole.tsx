@@ -7,7 +7,7 @@ const VERT = `#version 300 es
 in vec2 a_pos;
 void main() { gl_Position = vec4(a_pos, 0.0, 1.0); }`;
 
-// Reflex-style black hole: lensed twinkling stars, a dark event horizon,
+// Reflex-style (Gargantua) black hole: dark horizon, lensed arcs, flat disk;
 // a thin photon ring, three turbulent violet accretion bands and a halo,
 // tone-mapped onto the page background.
 const FRAG = `#version 300 es
@@ -18,69 +18,70 @@ uniform vec2  u_res;
 uniform float u_time;
 uniform vec2  u_mouse;
 
-// Tuned against reflex-template.framer.ai (offline preview renders).
-// All lengths are in units of canvas height. The ring is a flattened
-// ellipse (a tunnel seen at an angle). The page's own star layer shows
-// through, so the shader draws no stars of its own.
-const float CY      = 0.5143;  // ring centre, from the top of the canvas
-const float R       = 0.2286;  // photon ring (horizontal radius)
-const float SQUASH  = 1.45;    // vertical flattening
-const vec3  HORIZON = vec3(0.043, 0.016, 0.149); // #0B0426
+// Gargantua-style black hole, tuned side by side against
+// reflex-template.framer.ai. Geometry is in "reference px" (Reflex's
+// layout), scaled to this canvas. Disk line = canvas row at CY from the top.
+const float CY = 0.5143;
 
-vec3 hex(float r, float g, float b) { return vec3(r, g, b) / 255.0; }
-
-float band(float r, float k, float w) {
-  float d = (r - R * k) / w;
-  return exp(-d * d);
-}
+vec3 C(float r, float g, float b) { return vec3(r, g, b) / 255.0; }
+float G(float v, float w) { float d = v / w; return exp(-d * d); }
 
 void main() {
   float H = u_res.y;
-  vec2 uv = gl_FragCoord.xy / H;
-  vec2 c = vec2(0.5 * u_res.x / H, 1.0 - CY);
-  vec2 p = uv - c - u_mouse * 0.01;
-
-  float r = length(vec2(p.x, p.y * SQUASH));
-  float a = atan(p.y * SQUASH, p.x);
-  float up = clamp(sin(a), 0.0, 1.0);
-  float topB = 0.75 + 0.25 * up;
+  float s = (H / 700.0) * 0.85;                 // canvas px per reference px
+  vec2 c = vec2(0.5 * u_res.x, H * (1.0 - CY));
+  vec2 q = (gl_FragCoord.xy - c) / s - u_mouse * 8.0;
+  float x = q.x, y = q.y;
+  float ya = max(y, 0.0);
+  float above = step(0.0, y);
   float t = u_time;
-  float turb = 0.8 + 0.2 * (0.5 * sin(a * 5.0 + t * 0.4 + r * 28.0)
-                          + 0.3 * sin(a * 9.0 - t * 0.25)
-                          + 0.2 * sin(a * 3.0 + t * 0.15));
-  float tb = topB * turb;
+
+  // lensed arcs flare outward where they meet the disk
+  float flare = 1.0 + 0.38 * exp(-ya / 16.0);
+  float d  = length(vec2(x / flare, y));
+  float d0 = length(q);
+  float dop   = 1.0 + 0.12 * tanh(x / 250.0);
+  float flick = 0.93 + 0.07 * sin(t * 0.8 + x * 0.01);
+  float k = above * dop * flick;
 
   vec3 col = vec3(0.0);
-  // faint inner tunnel rings
-  col += hex(91.0, 63.0, 224.0)  * band(r, 0.82, 0.0029) * 0.22 * tb;
-  col += hex(106.0, 76.0, 255.0) * band(r, 0.90, 0.0029) * 0.30 * tb;
-  // main lavender ring + violet bands, with a dark gap between them
-  col += hex(232.0, 224.0, 255.0) * band(r, 1.00, 0.0057) * 1.60 * tb;
-  col += hex(156.0, 134.0, 255.0) * band(r, 1.07, 0.0086) * 0.70 * tb;
-  col += hex(91.0, 63.0, 224.0)  * band(r, 1.26, 0.0200) * 1.10 * tb;
-  col += hex(124.0, 92.0, 255.0) * band(r, 1.42, 0.0143) * 0.35 * tb;
-  // soft halo outside the ring
-  float outside = step(R, r);
-  col += hex(82.0, 51.0, 224.0) * exp(-max(r - R, 0.0) / 0.0786) * 0.50 * topB * outside;
-  // faint glow just inside the ring
-  col += hex(58.0, 30.0, 154.0) * exp(-max(R - r, 0.0) / 0.0429) * 0.18 * topB * (1.0 - outside);
-  // thin photon ring highlight
-  col += hex(244.0, 240.0, 255.0) * band(r, 1.00, 0.0026) * 0.90 * (0.55 + 0.45 * up);
+  col += C(241.0, 236.0, 255.0) * G(d - 150.0, 4.0) * 1.30 * k;
+  col += C(185.0, 166.0, 255.0) * G(d - 154.0, 7.0) * 0.45 * k;
+  col += C(143.0, 107.0, 255.0) * G(d - 176.0, 6.0) * 0.95 * k;
+  col += C(106.0,  69.0, 240.0) * G(d - 194.0, 14.0) * 0.50 * k;
+  col += C(106.0,  69.0, 240.0) * exp(-max(d - 150.0, 0.0) / 60.0) * 0.55 * above * step(176.0, d);
+  col += C( 42.0,  22.0, 112.0) * 0.08 * above * step(118.0, d0) * step(d, 150.0);
 
-  // event horizon: dark interior that still keeps a little of the inner rings
-  float hz = smoothstep(R * 0.97 + 0.003, R * 0.97 - 0.003, r);
-  col = col * (1.0 - hz) + HORIZON * hz + col * hz * 0.35;
+  // bright wings at the base of the arcs
+  col += C(233.0, 226.0, 255.0) * exp(-ya / 20.0) * G(abs(x) - 205.0, 85.0) * 0.85 * above * dop;
 
-  col = vec3(1.0) - exp(-col * 1.25);
+  // accretion disk: thin core, thick lumpy haze, lavender inner haze
+  float lump = 0.75 + 0.25 * (0.6 * sin(x * 0.045 + t * 0.6) + 0.4 * sin(x * 0.11 - t * 0.42));
+  col += vec3(1.0) * G(y, 2.0) * exp(-pow(abs(x) / 330.0, 1.6)) * 0.45 * dop;
+  col += C(118.0, 80.0, 255.0) * G(y - 16.0, 28.0) * exp(-pow(abs(x) / 440.0, 1.4)) * lump * 1.5 * dop;
+  col += C(201.0, 187.0, 255.0) * G(y - 9.6, 15.4) * G(abs(x) - 205.0, 153.0) * 0.55 * dop;
 
-  // fade into the page at the canvas edges (no hard cut-off)
-  float fromTop = (u_res.y - gl_FragCoord.y) / H;
+  // underside ring (shows through the glass console)
+  col += C(143.0, 107.0, 255.0) * G(length(vec2(x, y + 80.0)) - 110.0, 12.0) * 0.22 * (1.0 - above);
+
+  col = vec3(1.0) - exp(-col * 1.3);
+  float alpha = clamp(max(col.r, max(col.g, col.b)) * 1.5, 0.0, 1.0);
+
+  // event horizon (opaque) with a faint rim
+  float hole = above * (1.0 - smoothstep(117.0, 119.5, d0));
+  col = mix(col, C(6.0, 2.0, 15.0), hole);
+  alpha = mix(alpha, 1.0, hole);
+  col += C(59.0, 42.0, 138.0) * G(d0 - 115.0, 2.5) * 0.35 * above;
+
+  // fade into the page at the canvas edges
+  float fromTop  = (u_res.y - gl_FragCoord.y) / H;
+  float fromBot  = gl_FragCoord.y / H;
   float fromSide = min(gl_FragCoord.x, u_res.x - gl_FragCoord.x) / H;
   float m = pow(clamp(fromTop / 0.243, 0.0, 1.0), 1.5)
-          * pow(clamp(fromSide / 0.314, 0.0, 1.0), 1.5);
+          * pow(clamp(fromBot / 0.15, 0.0, 1.0), 1.5)
+          * pow(clamp(fromSide / 0.25, 0.0, 1.0), 1.5);
 
-  float alpha = clamp(max(hz, max(max(col.r, col.g), col.b) * 1.5), 0.0, 1.0) * m;
-  outColor = vec4(col * m, alpha); // premultiplied
+  outColor = vec4(col * m, alpha * m); // premultiplied
 }`;
 
 function compile(gl: WebGL2RenderingContext, type: number, src: string) {
@@ -367,24 +368,6 @@ export function BlackHole({
       className={`pointer-events-none ${className}`}
     >
       <canvas ref={canvasRef} className="h-full w-full" />
-      {/* bottom gradient blends the canvas into the page */}
-      <div
-        className="absolute inset-x-0 bottom-0 h-1/3"
-        style={{
-          background: "linear-gradient(180deg, transparent, var(--color-bg))",
-        }}
-      />
-      {/* crisp horizon overlay, as Reflex does, to keep the centre clean at any DPR */}
-      <div
-        className="absolute left-1/2 top-[62%] h-[40%] w-[40%] -translate-x-1/2 -translate-y-1/2 rounded-full"
-        style={{
-          background: "#0C0530",
-          maskImage:
-            "radial-gradient(78% 78% at 50% 50%, #000 80%, transparent 100%)",
-          WebkitMaskImage:
-            "radial-gradient(78% 78% at 50% 50%, #000 80%, transparent 100%)",
-        }}
-      />
     </div>
   );
 }

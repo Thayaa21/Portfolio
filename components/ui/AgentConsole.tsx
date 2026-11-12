@@ -81,9 +81,12 @@ export function AgentConsole() {
       aria-hidden="true"
       className="glass mx-auto w-full max-w-[760px] overflow-hidden rounded-[22px]"
       style={{
-        // Near-opaque so the black hole behind never reads through the body.
+        // Frosted glass, like Reflex: the black hole's underside reads
+        // softly through the blur.
         background:
-          "linear-gradient(180deg, rgba(16,12,36,0.97), rgba(10,7,24,0.98)), var(--color-bg)",
+          "linear-gradient(180deg, rgba(24,17,52,0.58), rgba(12,8,28,0.80))",
+        backdropFilter: "blur(16px) saturate(140%)",
+        WebkitBackdropFilter: "blur(16px) saturate(140%)",
       }}
     >
       {/* header */}

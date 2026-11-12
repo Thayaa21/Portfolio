@@ -191,7 +191,7 @@ export function Hero({ hasResume }: { hasResume: boolean }) {
                   to the CSS arc when WebGL2 is unavailable or reduced motion. */}
               <BlackHole
                 onReady={onBlackHoleReady}
-                className="absolute left-1/2 top-[-131px] h-[440px] w-[700px] max-w-none -translate-x-1/2 md:top-[-245px] md:h-[700px] md:w-[1100px]"
+                className="absolute left-1/2 top-[-143px] h-[440px] w-[700px] max-w-none -translate-x-1/2 md:top-[-257px] md:h-[700px] md:w-[1100px]"
               />
             </div>
           </m.div>
