@@ -2,7 +2,7 @@
 
 import { useRef, type ReactNode, type PointerEvent } from "react";
 import {
-  motion,
+  m,
   useMotionValue,
   useSpring,
   useTransform,
@@ -55,7 +55,7 @@ export function TiltCard({
   };
 
   return (
-    <motion.div
+    <m.div
       ref={ref}
       onPointerMove={onMove}
       onPointerLeave={onLeave}
@@ -63,6 +63,6 @@ export function TiltCard({
       className={`[transform-style:preserve-3d] ${className}`}
     >
       {children}
-    </motion.div>
+    </m.div>
   );
 }

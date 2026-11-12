@@ -3,7 +3,7 @@
 import Image from "next/image";
 import { useRef } from "react";
 import {
-  motion,
+  m,
   useScroll,
   useInView,
   useReducedMotion,
@@ -47,7 +47,7 @@ export function Timeline({
               aria-hidden="true"
               className="absolute left-[7px] top-2 bottom-2 w-px bg-[var(--color-border)]"
             />
-            <motion.span
+            <m.span
               aria-hidden="true"
               className="absolute left-[7px] top-2 bottom-2 w-px origin-top bg-[var(--color-accent)]"
               style={{ scaleY: reduce ? 1 : scrollYProgress }}
@@ -72,7 +72,7 @@ function TimelineRow({ entry: e }: { entry: TimelineEntry }) {
   return (
     <div ref={ref} className="relative pl-8">
       {/* dot pops in with a ring pulse when the line reaches it */}
-      <motion.span
+      <m.span
         aria-hidden="true"
         className={`absolute left-0 top-5 h-[15px] w-[15px] rounded-full border-2 border-[var(--color-accent)] bg-[var(--color-bg)] ${
           inView && !reduce ? "timeline-dot-pulse" : ""
@@ -81,7 +81,7 @@ function TimelineRow({ entry: e }: { entry: TimelineEntry }) {
         animate={reduce ? { scale: 1 } : { scale: inView ? 1 : 0 }}
         transition={{ duration: 0.4, ease }}
       />
-      <motion.div
+      <m.div
         initial={reduce ? false : { opacity: 0, x: 24 }}
         animate={
           reduce
@@ -127,7 +127,7 @@ function TimelineRow({ entry: e }: { entry: TimelineEntry }) {
             </div>
           </div>
         </GlassCard>
-      </motion.div>
+      </m.div>
     </div>
   );
 }

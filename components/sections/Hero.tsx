@@ -2,7 +2,7 @@
 
 import { useRef, type PointerEvent } from "react";
 import {
-  motion,
+  m,
   useMotionValue,
   useSpring,
   useInView,
@@ -116,7 +116,7 @@ export function Hero({ hasResume }: { hasResume: boolean }) {
         <div className="relative mt-28 md:mt-36">
           {/* glowing arc: rises behind the console, which overlaps its lower edge.
               top clamps the arc below the M.S. line so it never crosses the text. */}
-          <motion.div
+          <m.div
             aria-hidden="true"
             style={reduce ? undefined : { x: ax, y: ay }}
             initial={reduce ? undefined : { opacity: 0, y: 40, scale: 0.96 }}
@@ -178,9 +178,9 @@ export function Hero({ hasResume }: { hasResume: boolean }) {
                   It self-manages its render loop (pauses off-screen / tab hidden). */}
               <BlackHole className="absolute left-1/2 top-0 h-[520px] w-[900px] max-w-[150vw] -translate-x-1/2" />
             </div>
-          </motion.div>
+          </m.div>
 
-          <motion.div
+          <m.div
             className={`relative z-10 ${reduce ? "" : "hero-console-float"} ${
               paused ? "motion-paused" : ""
             }`}
@@ -189,7 +189,7 @@ export function Hero({ hasResume }: { hasResume: boolean }) {
             transition={{ duration: 0.7, ease, delay: 0.5 }}
           >
             <AgentConsole />
-          </motion.div>
+          </m.div>
           <p className="sr-only">
             A mock agent console that turns a plain-language request into a
             validated automation workflow, then sends it to human review.

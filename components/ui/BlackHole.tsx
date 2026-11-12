@@ -128,21 +128,87 @@ function compile(gl: WebGL2RenderingContext, type: number, src: string) {
   return sh;
 }
 
+// The shader loop is only worth running on real GPU hardware. On software
+// renderers (SwiftShader / llvmpipe, which is also what PageSpeed and many
+// low-end devices use) it blocks the main thread for tens of seconds, so we
+// bail out to the CSS arc fallback.
+const SOFTWARE_RE = /SwiftShader|llvmpipe|Software|Basic Render|ANGLE \(Software/i;
+
+function deviceAllowsWebGL(): boolean {
+  if (typeof navigator === "undefined") return false;
+  const nav = navigator as Navigator & {
+    connection?: { saveData?: boolean };
+    hardwareConcurrency?: number;
+  };
+  if (nav.connection?.saveData) return false;
+  if ((nav.hardwareConcurrency ?? 8) < 4) return false;
+  return true;
+}
+
+function onIdle(cb: () => void): () => void {
+  const w = window as Window & {
+    requestIdleCallback?: (cb: () => void) => number;
+    cancelIdleCallback?: (id: number) => void;
+  };
+  if (typeof w.requestIdleCallback === "function") {
+    const handle = w.requestIdleCallback(cb);
+    return () => w.cancelIdleCallback?.(handle);
+  }
+  const t = window.setTimeout(cb, 200);
+  return () => window.clearTimeout(t);
+}
+
 export function BlackHole({ className = "" }: { className?: string }) {
   const reduce = useReducedMotion();
   const canvasRef = useRef<HTMLCanvasElement>(null);
   const mouse = useRef({ x: 0, y: 0, tx: 0, ty: 0 });
 
   useEffect(() => {
+    if (!deviceAllowsWebGL()) return; // Save-Data / low-core → CSS arc
     const canvas = canvasRef.current;
     if (!canvas) return;
-    const gl = canvas.getContext("webgl2", {
+
+    let disposed = false;
+    let cleanup: (() => void) | undefined;
+
+    // Defer all GL work until the page has loaded and the main thread is idle,
+    // so it never competes with hydration or LCP.
+    const begin = () => {
+      if (disposed) return;
+      cleanup = setupGL();
+    };
+    let cancelIdle = () => {};
+    const startWhenReady = () => {
+      cancelIdle = onIdle(begin);
+    };
+    if (document.readyState === "complete") {
+      startWhenReady();
+    } else {
+      window.addEventListener("load", startWhenReady, { once: true });
+    }
+
+    function setupGL(): (() => void) | undefined {
+    const cv = canvas as HTMLCanvasElement;
+    const gl = cv.getContext("webgl2", {
       antialias: false,
       alpha: true,
       premultipliedAlpha: true,
       powerPreference: "low-power",
+      failIfMajorPerformanceCaveat: true,
     });
-    if (!gl) return; // no WebGL2 → CSS arc fallback stays visible
+    if (!gl) return; // no WebGL2 (or major perf caveat) → CSS arc fallback
+
+    // Refuse software renderers outright.
+    const dbg = gl.getExtension("WEBGL_debug_renderer_info");
+    if (dbg) {
+      const renderer = String(
+        gl.getParameter(dbg.UNMASKED_RENDERER_WEBGL) || ""
+      );
+      if (SOFTWARE_RE.test(renderer)) {
+        gl.getExtension("WEBGL_lose_context")?.loseContext();
+        return;
+      }
+    }
 
     gl.enable(gl.BLEND);
     gl.blendFunc(gl.ONE, gl.ONE_MINUS_SRC_ALPHA); // premultiplied alpha
@@ -175,53 +241,84 @@ export function BlackHole({ className = "" }: { className?: string }) {
     const SCALE = 0.75;
     const resize = () => {
       const dpr = Math.min(window.devicePixelRatio || 1, 1.5) * SCALE;
-      const w = Math.max(1, Math.floor(canvas.clientWidth * dpr));
-      const h = Math.max(1, Math.floor(canvas.clientHeight * dpr));
-      if (canvas.width !== w || canvas.height !== h) {
-        canvas.width = w;
-        canvas.height = h;
+      const w = Math.max(1, Math.floor(cv.clientWidth * dpr));
+      const h = Math.max(1, Math.floor(cv.clientHeight * dpr));
+      if (cv.width !== w || cv.height !== h) {
+        cv.width = w;
+        cv.height = h;
       }
-      gl.viewport(0, 0, canvas.width, canvas.height);
+      gl.viewport(0, 0, cv.width, cv.height);
     };
 
     const draw = (tSeconds: number) => {
       gl.clearColor(0, 0, 0, 0);
       gl.clear(gl.COLOR_BUFFER_BIT);
       gl.uniform1f(uTime, tSeconds);
-      gl.uniform2f(uRes, canvas.width, canvas.height);
+      gl.uniform2f(uRes, cv.width, cv.height);
       gl.uniform2f(uMouse, mouse.current.x, mouse.current.y);
       gl.drawArrays(gl.TRIANGLES, 0, 3);
     };
 
     const ro = new ResizeObserver(resize);
-    ro.observe(canvas);
+    ro.observe(cv);
     resize();
+
+    const destroyGL = () => {
+      ro.disconnect();
+      gl.deleteProgram(prog);
+      gl.deleteShader(vs!);
+      gl.deleteShader(fs!);
+      gl.deleteBuffer(buf);
+    };
 
     // Reduced motion: draw a single still frame and stop.
     if (reduce) {
       draw(8.0);
-      return () => {
-        ro.disconnect();
-        gl.deleteProgram(prog);
-        gl.deleteShader(vs);
-        gl.deleteShader(fs);
-        gl.deleteBuffer(buf);
-      };
+      return destroyGL;
     }
 
     const start = performance.now();
     let raf = 0;
     let running = false;
+    let last = 0;
+    const FRAME_MS = 1000 / 30; // cap at 30fps
+
+    // Frame-budget guard: sample the first 20 frames; if the average is over
+    // 24ms (software/low-end), freeze on a still frame and stop the loop.
+    let probed = 0;
+    let probeSum = 0;
+    let probePrev = 0;
+    let giveUp = false;
 
     const loop = (now: number) => {
-      // ease the pointer
+      if (!running) return;
+      raf = requestAnimationFrame(loop);
+
+      // budget probe
+      if (!giveUp && probed < 20) {
+        if (probePrev) {
+          probeSum += now - probePrev;
+          probed += 1;
+          if (probed === 20 && probeSum / 20 > 24) {
+            giveUp = true;
+            draw(8.0); // leave one good frame
+            stop();
+            return;
+          }
+        }
+        probePrev = now;
+      }
+
+      // 30fps throttle
+      if (now - last < FRAME_MS) return;
+      last = now;
+
       mouse.current.x += (mouse.current.tx - mouse.current.x) * 0.06;
       mouse.current.y += (mouse.current.ty - mouse.current.y) * 0.06;
       draw((now - start) / 1000);
-      raf = requestAnimationFrame(loop);
     };
     const play = () => {
-      if (running) return;
+      if (running || giveUp) return;
       running = true;
       raf = requestAnimationFrame(loop);
     };
@@ -235,19 +332,23 @@ export function BlackHole({ className = "" }: { className?: string }) {
       ([e]) => (e.isIntersecting && !document.hidden ? play() : stop()),
       { threshold: 0 }
     );
-    io.observe(canvas);
+    io.observe(cv);
     const onVis = () => (document.hidden ? stop() : play());
     document.addEventListener("visibilitychange", onVis);
 
     return () => {
       stop();
       io.disconnect();
-      ro.disconnect();
       document.removeEventListener("visibilitychange", onVis);
-      gl.deleteProgram(prog);
-      gl.deleteShader(vs);
-      gl.deleteShader(fs);
-      gl.deleteBuffer(buf);
+      destroyGL();
+    };
+    } // end setupGL
+
+    return () => {
+      disposed = true;
+      cancelIdle();
+      window.removeEventListener("load", startWhenReady);
+      cleanup?.();
     };
   }, [reduce]);
 

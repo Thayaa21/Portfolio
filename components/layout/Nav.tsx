@@ -2,7 +2,7 @@
 
 import { useEffect, useRef, useState } from "react";
 import {
-  motion,
+  m,
   useScroll,
   useMotionValueEvent,
   useReducedMotion,
@@ -56,7 +56,7 @@ export function Nav({ hasResume }: { hasResume: boolean }) {
   }, [open]);
 
   return (
-    <motion.header
+    <m.header
       className="fixed inset-x-0 top-0 z-50"
       initial={false}
       animate={{ y: hidden && !reduce ? "-110%" : "0%" }}
@@ -105,7 +105,7 @@ export function Nav({ hasResume }: { hasResume: boolean }) {
                     }`}
                   >
                     {isActive && (
-                      <motion.span
+                      <m.span
                         layoutId={reduce ? undefined : "nav-pill"}
                         className="absolute inset-0 -z-10 rounded-[99px] border border-[var(--color-border)] bg-[var(--color-surface-2)]"
                         transition={{
@@ -190,6 +190,6 @@ export function Nav({ hasResume }: { hasResume: boolean }) {
           </div>
         </div>
       )}
-    </motion.header>
+    </m.header>
   );
 }

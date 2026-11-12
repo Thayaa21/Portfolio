@@ -1,6 +1,6 @@
 "use client";
 
-import { motion, useScroll, useSpring, useReducedMotion } from "motion/react";
+import { m, useScroll, useSpring, useReducedMotion } from "motion/react";
 import { spring } from "@/lib/motion";
 
 export function ScrollProgress() {
@@ -11,7 +11,7 @@ export function ScrollProgress() {
   if (reduce) return null;
 
   return (
-    <motion.div
+    <m.div
       aria-hidden="true"
       className="fixed inset-x-0 top-0 z-[60] h-[2px] origin-left"
       style={{

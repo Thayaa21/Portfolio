@@ -3,7 +3,7 @@
 import Image from "next/image";
 import { useRef } from "react";
 import {
-  motion,
+  m,
   useScroll,
   useTransform,
   useReducedMotion,
@@ -181,7 +181,7 @@ function WorkPanel({
       <Reveal className="group/panel lg:hidden">{panelInner}</Reveal>
 
       {/* Desktop: sticky stacking with scale/dim */}
-      <motion.div
+      <m.div
         ref={ref}
         className="group/panel sticky hidden lg:block"
         style={{
@@ -197,7 +197,7 @@ function WorkPanel({
         transition={{ duration: 0.6, ease }}
       >
         {panelInner}
-      </motion.div>
+      </m.div>
     </>
   );
 }

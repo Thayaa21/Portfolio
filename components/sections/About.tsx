@@ -2,7 +2,7 @@
 
 import Image from "next/image";
 import { useRef } from "react";
-import { motion, useReducedMotion, useScroll, useTransform } from "motion/react";
+import { m, useReducedMotion, useScroll, useTransform } from "motion/react";
 import { about, identity } from "@/content/site";
 import { GlassCard } from "@/components/ui/GlassCard";
 import { CountUp } from "@/components/ui/CountUp";
@@ -31,12 +31,12 @@ export function About() {
               aria-hidden="true"
               className="pointer-events-none absolute inset-x-0 top-0 -z-0 flex justify-center overflow-hidden"
             >
-              <motion.span
+              <m.span
                 style={reduce ? undefined : { y: wordY }}
                 className="giant-word block whitespace-nowrap text-center text-[clamp(52px,13vw,150px)] leading-none"
               >
                 {about.bgWord}
-              </motion.span>
+              </m.span>
             </div>
 
             <Reveal className="relative z-10 w-full max-w-[360px]">
