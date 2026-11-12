@@ -3,7 +3,9 @@ import { Github } from "lucide-react";
 import { moreProjects, visibleProjects } from "@/content/site";
 import { GlassCard } from "@/components/ui/GlassCard";
 import { ProjectVisual } from "@/components/ui/ProjectVisual";
-import { Reveal, RevealGroup, RevealItem } from "@/components/ui/Reveal";
+import { RevealGroup, RevealItem } from "@/components/ui/Reveal";
+import { SplitText } from "@/components/ui/SplitText";
+import { TiltCard } from "@/components/ui/TiltCard";
 
 export function MoreProjects() {
   const projects = visibleProjects(moreProjects.projects);
@@ -11,15 +13,16 @@ export function MoreProjects() {
   return (
     <section id="more-projects" className="section">
       <div className="container-content">
-        <Reveal>
-          <h2 className="font-display text-[30px] font-medium tracking-[-0.028em] md:text-[42px]">
-            {moreProjects.h2}
-          </h2>
-        </Reveal>
+        <SplitText
+          as="h2"
+          text={moreProjects.h2}
+          className="font-display text-[30px] font-medium tracking-[-0.028em] md:text-[42px]"
+        />
 
         <RevealGroup className="mt-10 grid grid-cols-1 gap-5 sm:grid-cols-2 lg:grid-cols-3">
           {projects.map((p) => (
             <RevealItem key={p.slug}>
+              <TiltCard className="h-full">
               <GlassCard as="article" className="flex h-full flex-col overflow-hidden">
                 {p.image ? (
                   <div className="overflow-hidden border-b border-[var(--color-border)]">
@@ -70,6 +73,7 @@ export function MoreProjects() {
                   </div>
                 </div>
               </GlassCard>
+              </TiltCard>
             </RevealItem>
           ))}
         </RevealGroup>

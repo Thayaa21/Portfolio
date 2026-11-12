@@ -57,7 +57,7 @@ export function Skills() {
       <div className="container-content">
         <div className="mb-10">
           <Reveal>
-            <SectionLabel>+ SKILLS</SectionLabel>
+            <SectionLabel as="h2">+ SKILLS</SectionLabel>
           </Reveal>
         </div>
 

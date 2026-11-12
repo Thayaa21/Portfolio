@@ -1,6 +1,6 @@
 "use client";
 
-import type { ReactNode, PointerEvent } from "react";
+import type { ReactNode, PointerEvent, CSSProperties } from "react";
 import { useCallback } from "react";
 
 export function GlassCard({
@@ -9,12 +9,14 @@ export function GlassCard({
   radius = "card",
   as = "div",
   interactive = true,
+  style,
 }: {
   children: ReactNode;
   className?: string;
   radius?: "card" | "panel";
   as?: "div" | "article" | "li";
   interactive?: boolean;
+  style?: CSSProperties;
 }) {
   const handlePointer = useCallback((e: PointerEvent<HTMLElement>) => {
     const el = e.currentTarget;
@@ -32,6 +34,7 @@ export function GlassCard({
     <Tag
       onPointerMove={interactive ? handlePointer : undefined}
       className={`glass ${radiusCls} ${interactiveCls} ${className}`}
+      style={style}
     >
       {children}
     </Tag>

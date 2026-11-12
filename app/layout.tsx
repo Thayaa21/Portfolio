@@ -4,6 +4,8 @@ import { satoshi, inter, geistMono } from "./fonts";
 import { Background } from "@/components/layout/Background";
 import { Nav } from "@/components/layout/Nav";
 import { Footer } from "@/components/layout/Footer";
+import { SmoothScroll } from "@/components/layout/SmoothScroll";
+import { ScrollProgress } from "@/components/layout/ScrollProgress";
 import { identity, hero } from "@/content/site";
 import { resumeExists, siteUrl } from "@/lib/utils";
 
@@ -83,10 +85,13 @@ export default function RootLayout({
           type="application/ld+json"
           dangerouslySetInnerHTML={{ __html: JSON.stringify(jsonLd) }}
         />
-        <Background />
-        <Nav hasResume={hasResume} />
-        <main>{children}</main>
-        <Footer />
+        <SmoothScroll>
+          <ScrollProgress />
+          <Background />
+          <Nav hasResume={hasResume} />
+          <main>{children}</main>
+          <Footer />
+        </SmoothScroll>
       </body>
     </html>
   );

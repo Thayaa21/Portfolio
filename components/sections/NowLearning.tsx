@@ -7,7 +7,7 @@ export function NowLearning() {
     <section id="now-learning" className="section">
       <div className="container-content">
         <Reveal>
-          <SectionLabel>{nowLearning.label}</SectionLabel>
+          <SectionLabel as="h2">{nowLearning.label}</SectionLabel>
           <p className="mt-5 max-w-[560px] text-[17px] text-[var(--color-text-2)]">
             {nowLearning.intro}
           </p>

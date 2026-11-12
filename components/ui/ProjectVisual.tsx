@@ -1,12 +1,23 @@
 "use client";
+"use client";
+
+import { useRef } from "react";
+import { useInView } from "motion/react";
 
 type Mode = "pipeline" | "cluster" | "graph";
 
 export function ProjectVisual({ mode }: { mode: Mode }) {
+  const ref = useRef<HTMLDivElement>(null);
+  // Only run the SVG/CSS animations while on screen.
+  const inView = useInView(ref, { margin: "0px" });
+
   return (
     <div
+      ref={ref}
       aria-hidden="true"
-      className="glass relative flex aspect-[4/3] w-full items-center justify-center overflow-hidden rounded-[22px]"
+      className={`glass relative flex aspect-[4/3] w-full items-center justify-center overflow-hidden rounded-[22px] ${
+        inView ? "" : "motion-paused [&_*]:[animation-play-state:paused]"
+      }`}
       style={{ background: "var(--section-glow), var(--color-surface)" }}
     >
       {mode === "pipeline" && <Pipeline />}

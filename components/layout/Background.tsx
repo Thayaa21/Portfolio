@@ -1,3 +1,5 @@
+import { StarField } from "@/components/layout/StarField";
+
 export function Background() {
   return (
     <div
@@ -7,7 +9,7 @@ export function Background() {
       {/* base colour */}
       <div className="absolute inset-0 bg-[var(--color-bg)]" />
 
-      {/* star / noise layer */}
+      {/* static star / noise grid */}
       <div
         className="absolute inset-0 opacity-30"
         style={{
@@ -16,6 +18,9 @@ export function Background() {
           backgroundSize: "28px 28px",
         }}
       />
+
+      {/* twinkling stars (two staggered layers) */}
+      <StarField />
 
       {/* large violet glow behind the hero */}
       <div
