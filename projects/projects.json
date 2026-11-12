@@ -11,8 +11,17 @@
     }
   },
   {
+    "name": "ATLAS-X — Fraud Detection with Graph Features",
+    "desc": "Team project: XGBoost with graph features from a Neo4j card–device–email network, trained on 590k real IEEE-CIS transactions (0.957 AUC, ~17 ms inference), with Kafka streaming, FastAPI, Prometheus/Grafana monitoring and LLM-generated explanations.",
+    "image": "explainableai",
+    "category": "ai-ml",
+    "links": {
+      "view": "https://github.com/Thayaa21/atlas-x"
+    }
+  },
+  {
     "name": "Citation-Aware Multimodal Research Analysis",
-    "desc": "Developed an AI-powered system for extracting, analyzing, and synthesizing knowledge from PDFs, citation mapping, similarity search, and a Streamlit interface.",
+    "desc": "Research assistant for PDFs that runs a local Llama 3.1 8B with FAISS retrieval, parses tables and flowcharts, maps citations, and answers questions with sources through a Streamlit interface.",
     "image": "researchanalysis",
     "category": "ai-ml",
     "links": {
@@ -30,7 +39,7 @@
   },
   {
     "name": "EchoShield",
-    "desc": "Built a real-time AI system for voice isolation and smart ambient-mode triggers, enabling clear speech in noisy environments and detection of wake words or alerts.",
+    "desc": "Real-time, on-device audio system for voice isolation and smart ambient-mode triggers, using WebRTC VAD, Resemblyzer speaker verification and Vosk wake-word detection. Tuned frame size from 30 to 60 ms to fix CPU overload.",
     "image": "echosheid",
     "category": "ai-ml",
     "links": {
