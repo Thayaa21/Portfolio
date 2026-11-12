@@ -18,107 +18,69 @@ uniform vec2  u_res;
 uniform float u_time;
 uniform vec2  u_mouse;
 
-const vec3 BG      = vec3(0.016, 0.0, 0.078);   // #040014
-const vec3 HORIZON = vec3(0.047, 0.020, 0.188); // #0C0530
-const vec3 STAR    = vec3(0.957, 0.941, 1.0);   // #F4F0FF
-const vec3 RINGLO  = vec3(1.0);                 // #FFFFFF
-const vec3 RINGHI  = vec3(0.863, 0.824, 1.0);   // #DCD2FF
-const vec3 BAND1   = vec3(0.749, 0.694, 1.0);   // #BFB1FF
-const vec3 BAND2   = vec3(0.541, 0.447, 1.0);   // #8A72FF
-const vec3 BAND3   = vec3(0.486, 0.361, 1.0);   // #7C5CFF
+// Tuned against reflex-template.framer.ai (offline preview renders).
+// All lengths are in units of canvas height. The ring is a flattened
+// ellipse (a tunnel seen at an angle). The page's own star layer shows
+// through, so the shader draws no stars of its own.
+const float CY      = 0.5143;  // ring centre, from the top of the canvas
+const float R       = 0.2286;  // photon ring (horizontal radius)
+const float SQUASH  = 1.45;    // vertical flattening
+const vec3  HORIZON = vec3(0.043, 0.016, 0.149); // #0B0426
 
-float hash21(vec2 p) {
-  p = fract(p * vec2(123.34, 456.21));
-  p += dot(p, p + 45.32);
-  return fract(p.x * p.y);
-}
+vec3 hex(float r, float g, float b) { return vec3(r, g, b) / 255.0; }
 
-// simple value-noise fbm
-float noise(vec2 p) {
-  vec2 i = floor(p), f = fract(p);
-  float a = hash21(i);
-  float b = hash21(i + vec2(1.0, 0.0));
-  float c = hash21(i + vec2(0.0, 1.0));
-  float d = hash21(i + vec2(1.0, 1.0));
-  vec2 u = f * f * (3.0 - 2.0 * f);
-  return mix(mix(a, b, u.x), mix(c, d, u.x), u.y);
-}
-float fbm(vec2 p) {
-  float v = 0.0, amp = 0.5;
-  for (int i = 0; i < 4; i++) { v += amp * noise(p); p *= 2.0; amp *= 0.5; }
-  return v;
-}
-
-float starLayer(vec2 q, float density, float rate) {
-  vec2 g = q * density;
-  vec2 cell = floor(g);
-  float h = hash21(cell);
-  vec2 center = cell + 0.5 + 0.35 * vec2(hash21(cell + 1.3) - 0.5, hash21(cell + 7.1) - 0.5);
-  float d = length(g - center);
-  float star = smoothstep(0.08, 0.0, d) * step(0.78, h);
-  float tw = 0.6 + 0.4 * sin(u_time * rate + h * 6.2831);
-  return star * tw;
+float band(float r, float k, float w) {
+  float d = (r - R * k) / w;
+  return exp(-d * d);
 }
 
 void main() {
-  vec2 p = (gl_FragCoord.xy - 0.5 * u_res) / u_res.y;
-  // Ring centre sits ~150px below the canvas top (just under the console's
-  // top edge) so the upper half rises above the console as an arch.
-  p.y -= 0.21;
-  p -= u_mouse * 0.02;
+  float H = u_res.y;
+  vec2 uv = gl_FragCoord.xy / H;
+  vec2 c = vec2(0.5 * u_res.x / H, 1.0 - CY);
+  vec2 p = uv - c - u_mouse * 0.01;
 
-  float r = length(p);
-  float a = atan(p.y, p.x);
+  float r = length(vec2(p.x, p.y * SQUASH));
+  float a = atan(p.y * SQUASH, p.x);
+  float up = clamp(sin(a), 0.0, 1.0);
+  float topB = 0.75 + 0.25 * up;
+  float t = u_time;
+  float turb = 0.8 + 0.2 * (0.5 * sin(a * 5.0 + t * 0.4 + r * 28.0)
+                          + 0.3 * sin(a * 9.0 - t * 0.25)
+                          + 0.2 * sin(a * 3.0 + t * 0.15));
+  float tb = topB * turb;
 
-  // gravitational lensing of the star field (clamped so edge stars don't
-  // smear into a diagonal streak)
-  float lens = min(0.045 / (r * r + 0.002), 1.2);
-  vec2 q = p * (1.0 + lens);
+  vec3 col = vec3(0.0);
+  // faint inner tunnel rings
+  col += hex(91.0, 63.0, 224.0)  * band(r, 0.82, 0.0029) * 0.22 * tb;
+  col += hex(106.0, 76.0, 255.0) * band(r, 0.90, 0.0029) * 0.30 * tb;
+  // main lavender ring + violet bands, with a dark gap between them
+  col += hex(232.0, 224.0, 255.0) * band(r, 1.00, 0.0057) * 1.60 * tb;
+  col += hex(156.0, 134.0, 255.0) * band(r, 1.07, 0.0086) * 0.70 * tb;
+  col += hex(91.0, 63.0, 224.0)  * band(r, 1.26, 0.0200) * 1.10 * tb;
+  col += hex(124.0, 92.0, 255.0) * band(r, 1.42, 0.0143) * 0.35 * tb;
+  // soft halo outside the ring
+  float outside = step(R, r);
+  col += hex(82.0, 51.0, 224.0) * exp(-max(r - R, 0.0) / 0.0786) * 0.50 * topB * outside;
+  // faint glow just inside the ring
+  col += hex(58.0, 30.0, 154.0) * exp(-max(R - r, 0.0) / 0.0429) * 0.18 * topB * (1.0 - outside);
+  // thin photon ring highlight
+  col += hex(244.0, 240.0, 255.0) * band(r, 1.00, 0.0026) * 0.90 * (0.55 + 0.45 * up);
 
-  vec3 col = BG;
+  // event horizon: dark interior that still keeps a little of the inner rings
+  float hz = smoothstep(R * 0.97 + 0.003, R * 0.97 - 0.003, r);
+  col = col * (1.0 - hz) + HORIZON * hz + col * hz * 0.35;
 
-  // stars (2 layers), hidden later by the horizon. Confined to a ring around
-  // the hole and faded out at the far field so no stray streak appears.
-  float starField = smoothstep(0.9, 0.35, r) * smoothstep(0.24, 0.34, r);
-  float stars = starLayer(q, 9.0, 2.3) + starLayer(q + 3.7, 15.0, 1.6) * 0.7;
-  col += STAR * stars * starField * 0.9;
+  col = vec3(1.0) - exp(-col * 1.25);
 
-  float R = 0.28;
+  // fade into the page at the canvas edges (no hard cut-off)
+  float fromTop = (u_res.y - gl_FragCoord.y) / H;
+  float fromSide = min(gl_FragCoord.x, u_res.x - gl_FragCoord.x) / H;
+  float m = pow(clamp(fromTop / 0.243, 0.0, 1.0), 1.5)
+          * pow(clamp(fromSide / 0.314, 0.0, 1.0), 1.5);
 
-  // halo
-  col += BAND3 * exp(-max(r - R, 0.0) * 5.5) * 0.35;
-
-  // accretion bands (gaussian rings, turbulent, side-brightened)
-  float turb = mix(0.55, 1.0, fbm(vec2(a * 3.0 + u_time * 0.12, r * 9.0 - u_time * 0.05)));
-  float side = 1.0 + 0.35 * cos(a - u_time * 0.3);
-  col += BAND1 * exp(-pow((r - R * 1.18) / 0.018, 2.0)) * 0.9 * turb * side;
-  col += BAND2 * exp(-pow((r - R * 1.34) / 0.03,  2.0)) * 0.6 * turb * side;
-  col += BAND3 * exp(-pow((r - R * 1.55) / 0.05,  2.0)) * 0.35 * turb * side;
-
-  // photon ring
-  float ring = exp(-pow((r - R * 1.06) / 0.0055, 2.0)) * 1.6;
-  col += mix(RINGLO, RINGHI, 0.5 + 0.5 * sin(a + u_time * 0.2)) * ring;
-
-  // event horizon disc (hides stars behind it)
-  float horizon = smoothstep(R, R - 0.01, r);
-  col = mix(col, HORIZON, horizon);
-
-  // tone map
-  col = vec3(1.0) - exp(-col * 1.4);
-
-  // Vignette the far field back to background (no top fade: the upper half
-  // of the ring must stay visible as the arch).
-  float vig = smoothstep(1.1, 0.3, r);
-  float mask = vig;
-  col = mix(BG, col, mask);
-
-  // Alpha from brightness above BG plus the horizon, so the canvas
-  // composites as an arch over the page glow (no hard rectangle).
-  vec3 lift = max(col - BG, 0.0);
-  float horizonA = smoothstep(R, R - 0.01, r);
-  float alpha = clamp(max(max(lift.r, lift.g), lift.b) * 2.2 + horizonA, 0.0, 1.0);
-  alpha *= mask;
-  outColor = vec4(col * alpha, alpha); // premultiplied
+  float alpha = clamp(max(hz, max(max(col.r, col.g), col.b) * 1.5), 0.0, 1.0) * m;
+  outColor = vec4(col * m, alpha); // premultiplied
 }`;
 
 function compile(gl: WebGL2RenderingContext, type: number, src: string) {

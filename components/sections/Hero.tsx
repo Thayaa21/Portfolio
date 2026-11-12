@@ -118,7 +118,7 @@ export function Hero({ hasResume }: { hasResume: boolean }) {
         </div>
 
         {/* glowing arc + console */}
-        <div className="relative mt-28 md:mt-36">
+        <div className="relative mt-28 md:mt-48">
           {/* glowing arc: rises behind the console, which overlaps its lower edge.
               top clamps the arc below the M.S. line so it never crosses the text. */}
           <m.div
@@ -127,7 +127,7 @@ export function Hero({ hasResume }: { hasResume: boolean }) {
             initial={reduce ? undefined : { opacity: 0, y: 40, scale: 0.96 }}
             animate={reduce ? undefined : { opacity: 1, y: 0, scale: 1 }}
             transition={{ duration: 0.9, ease, delay: 0.3 }}
-            className="pointer-events-none absolute inset-x-0 bottom-0 top-[-90px] flex items-start justify-center overflow-hidden md:top-[-110px]"
+            className="pointer-events-none absolute inset-x-0 bottom-0 top-[-90px] flex items-start justify-center overflow-x-clip md:top-[-110px]"
           >
             <div className="relative h-[460px] w-[900px] max-w-[150vw]">
               {/* soft ambient bloom (kept under both the CSS arc and the WebGL) */}
@@ -191,7 +191,7 @@ export function Hero({ hasResume }: { hasResume: boolean }) {
                   to the CSS arc when WebGL2 is unavailable or reduced motion. */}
               <BlackHole
                 onReady={onBlackHoleReady}
-                className="absolute left-1/2 top-0 h-[520px] w-[900px] max-w-[150vw] -translate-x-1/2"
+                className="absolute left-1/2 top-[-131px] h-[440px] w-[700px] max-w-none -translate-x-1/2 md:top-[-245px] md:h-[700px] md:w-[1100px]"
               />
             </div>
           </m.div>
