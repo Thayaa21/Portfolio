@@ -89,11 +89,10 @@ Each card: title, one line, chips, GitHub link icon.
 - **Explainable AI Demos**: "Notebook collection of XAI techniques for model interpretability." Chips: SHAP · LIME · Jupyter. https://github.com/Thayaa21/Explainable-AI-demos. Image: `projects/explainableai.png`
 - **AR E-Brochure: Vedic Heritage**: "Interactive AR brochure that combines cultural storytelling with web AR." Chips: WebAR · HTML/JS. https://github.com/Thayaa21/ar-e-brochure-vedicheritage. Image: `projects/vedicheritage.png`
 
-Hidden until Thayaa confirms (`visible: false`). Build the cards, but don't render them:
-- **Cross-Document Graph RAG**: "Knowledge-graph RAG that links the same person across documents and answers with line-level citations; LangChain or UiPath extraction." https://github.com/Thayaa21/QB1
-- **Voice Agent: Hospital Appointments**: "Phone agent that verifies callers and answers from a Graph RAG backend." https://github.com/Thayaa21/Voice_Agent
-- **Remote Dev Assistant**: "Call a number, and your laptop wakes up and takes code changes, tests and commits from Slack." https://github.com/Thayaa21/Computer_use
+Hidden until Thayaa confirms (`visible: false`). Build the card, but don't render it:
 - **Market Signals**: "LangGraph agent that explains market anomalies with charts and cited news." https://github.com/Thayaa21/Market_signals
+
+Never add these repos anywhere on the site. They are qBotica work: QB1, Voice_Agent, Computer_use, interview-agent.
 
 ## Experience (Danie timeline: mono label column "+ EXPERIENCE" on the left, entries in a card on the right)
 1. **qBotica**, AI Intern · Jun 2026 – Present · Tempe, AZ

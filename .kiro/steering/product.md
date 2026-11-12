@@ -28,4 +28,5 @@ It should feel premium and calm. Motion should be smooth, not busy.
 5. Do not mention Vian Analytics, startups, "co-founder" or "CTO".
 6. GPU/CUDA/HIP/C++ systems work is shown as **learning**, never as experience.
 7. Leave out pricing, testimonials, services-for-hire, FAQ, blog and newsletter sections, even though the templates have them.
-8. Projects marked `visible: false` in content stay hidden until Thayaa flips the flag.
+8. Never show the repos QB1, Voice_Agent, Computer_use or interview-agent (they are qBotica work). The qubi Autopilot case study and the Experience entry are the only qBotica content.
+9. Projects marked `visible: false` in content stay hidden until Thayaa flips the flag.
