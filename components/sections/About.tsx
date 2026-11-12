@@ -25,31 +25,37 @@ export function About() {
         >
           {/* left: giant word + arch portrait */}
           <div className="relative flex justify-center">
-            <motion.span
+            {/* giant faded word, clipped so it never causes horizontal overflow */}
+            <div
               aria-hidden="true"
-              style={reduce ? undefined : { y: wordY }}
-              className="giant-word pointer-events-none absolute -top-10 left-1/2 -translate-x-1/2 text-center text-[clamp(96px,18vw,240px)]"
+              className="pointer-events-none absolute inset-x-0 top-0 -z-0 flex justify-center overflow-hidden"
             >
-              {about.bgWord}
-            </motion.span>
+              <motion.span
+                style={reduce ? undefined : { y: wordY }}
+                className="giant-word block whitespace-nowrap text-center text-[clamp(52px,13vw,150px)] leading-none"
+              >
+                {about.bgWord}
+              </motion.span>
+            </div>
 
             <Reveal className="relative z-10 w-full max-w-[360px]">
               <div
                 className="relative overflow-hidden"
                 style={{ borderRadius: "999px 999px 32px 32px" }}
               >
+                {/* violet → transparent gradient behind the photo */}
                 <div
                   className="absolute inset-0 z-0"
                   style={{
                     background:
-                      "linear-gradient(180deg, rgba(124,92,255,0.45), transparent 70%)",
+                      "linear-gradient(180deg, rgba(124,92,255,0.55), rgba(124,92,255,0.15) 45%, transparent 75%)",
                   }}
                 />
                 <Image
                   src={identity.portrait}
                   alt="Portrait of Thayaananthan Kanagaraj"
-                  width={360}
-                  height={460}
+                  width={797}
+                  height={980}
                   className="relative z-10 h-auto w-full object-cover"
                   priority={false}
                 />

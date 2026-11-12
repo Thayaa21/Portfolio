@@ -255,33 +255,6 @@ export const moreProjects = {
     },
     // Hidden until Thayaa confirms (visible: false). Built but not rendered.
     {
-      slug: "cross-document-graph-rag",
-      title: "Cross-Document Graph RAG",
-      description:
-        "Knowledge-graph RAG that links the same person across documents and answers with line-level citations; LangChain or UiPath extraction.",
-      chips: ["Graph RAG", "LangChain", "UiPath"],
-      href: "https://github.com/Thayaa21/QB1",
-      visible: false,
-    },
-    {
-      slug: "voice-agent-hospital",
-      title: "Voice Agent: Hospital Appointments",
-      description:
-        "Phone agent that verifies callers and answers from a Graph RAG backend.",
-      chips: ["Voice", "Graph RAG"],
-      href: "https://github.com/Thayaa21/Voice_Agent",
-      visible: false,
-    },
-    {
-      slug: "remote-dev-assistant",
-      title: "Remote Dev Assistant",
-      description:
-        "Call a number, and your laptop wakes up and takes code changes, tests and commits from Slack.",
-      chips: ["Slack", "Automation"],
-      href: "https://github.com/Thayaa21/Computer_use",
-      visible: false,
-    },
-    {
       slug: "market-signals",
       title: "Market Signals",
       description:
@@ -419,8 +392,8 @@ export const nowLearning = {
   intro: "The layer under the models, where my work is heading.",
   cards: [
     { title: "CUDA", detail: "PMPP book + GPU MODE lectures" },
-    { title: "AMD HIP / ROCm", detail: "" },
-    { title: "Modern C++", detail: "" },
+    { title: "AMD HIP / ROCm", detail: "Porting CUDA-style kernels to AMD GPUs" },
+    { title: "Modern C++", detail: "Memory, RAII and performance for systems code" },
     { title: "LLM inference", detail: "KV cache, FlashAttention, batching" },
   ] as LearningCard[],
 };

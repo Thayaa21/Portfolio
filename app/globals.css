@@ -54,6 +54,7 @@
 html {
   scroll-behavior: smooth;
   -webkit-text-size-adjust: 100%;
+  overflow-x: clip;
 }
 
 @media (prefers-reduced-motion: reduce) {
@@ -70,7 +71,7 @@ body {
   line-height: 1.6;
   -webkit-font-smoothing: antialiased;
   text-rendering: optimizeLegibility;
-  overflow-x: hidden;
+  overflow-x: clip;
 }
 
 ::selection {
@@ -235,14 +236,16 @@ h4 {
   border: 0;
 }
 
-/* Section helpers */
+/* Section helpers.
+   Adjacent sections each contribute padding, so a gap is twice this value.
+   72px desktop keeps inter-section gaps near ~144px instead of ~240px. */
 .section {
-  padding-block: 80px;
+  padding-block: 56px;
 }
 
 @media (min-width: 768px) {
   .section {
-    padding-block: 120px;
+    padding-block: 72px;
   }
 }
 

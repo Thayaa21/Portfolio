@@ -1,4 +1,5 @@
-import { Github, Linkedin, Mail } from "lucide-react";
+import { Github, Mail } from "lucide-react";
+import { FaLinkedin } from "react-icons/fa6";
 import { footer, identity, nav } from "@/content/site";
 
 export function Footer() {
@@ -62,7 +63,7 @@ export function Footer() {
             aria-label="LinkedIn"
             className="flex h-10 w-10 items-center justify-center rounded-[12px] border border-[var(--color-border)] bg-[var(--color-surface)] text-[var(--color-text-2)] transition-colors hover:border-[var(--color-border-strong)] hover:text-[var(--color-text)]"
           >
-            <Linkedin size={18} />
+            <FaLinkedin size={18} />
           </a>
           <a
             href={`mailto:${identity.email}`}

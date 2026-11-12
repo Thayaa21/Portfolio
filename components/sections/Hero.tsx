@@ -111,33 +111,48 @@ export function Hero({ hasResume }: { hasResume: boolean }) {
         </motion.div>
 
         {/* glowing arc + console */}
-        <div className="relative mt-16 md:mt-20">
-          {/* arc */}
-          <div aria-hidden="true" className="pointer-events-none absolute inset-x-0 -top-10 flex justify-center">
-            <div className="relative h-[320px] w-[760px] max-w-[94vw]">
+        <div className="relative mt-24 md:mt-32">
+          {/* glowing arc: rises behind the console, which overlaps its lower edge */}
+          <div
+            aria-hidden="true"
+            className="pointer-events-none absolute inset-x-0 bottom-0 top-[-180px] flex items-start justify-center overflow-hidden md:top-[-240px]"
+          >
+            <div className="relative h-[460px] w-[900px] max-w-[150vw]">
+              {/* soft ambient bloom */}
               <div
-                className="absolute inset-0 rounded-[999px] blur-[60px]"
+                className="absolute inset-x-0 top-0 h-[360px] blur-[70px]"
                 style={{
                   background:
-                    "radial-gradient(60% 70% at 50% 100%, rgba(138,114,255,0.35), transparent 70%)",
+                    "radial-gradient(50% 60% at 50% 55%, rgba(138,114,255,0.5), transparent 72%)",
                 }}
               />
+              {/* filled half-ellipse body */}
               <div
-                className="absolute bottom-0 left-1/2 h-[260px] w-[680px] max-w-[92vw] -translate-x-1/2 rounded-t-[999px] border-t border-[rgba(220,210,255,0.4)]"
+                className="absolute left-1/2 top-0 h-[460px] w-[760px] max-w-[128vw] -translate-x-1/2 rounded-[999px]"
                 style={{
                   background:
-                    "conic-gradient(from 180deg at 50% 100%, rgba(220,210,255,0.08), rgba(124,92,255,0.14), rgba(220,210,255,0.08))",
-                  maskImage:
-                    "radial-gradient(60% 100% at 50% 100%, black, transparent 72%)",
-                  WebkitMaskImage:
-                    "radial-gradient(60% 100% at 50% 100%, black, transparent 72%)",
+                    "radial-gradient(50% 50% at 50% 50%, rgba(124,92,255,0.30), rgba(84,34,196,0.10) 60%, transparent 72%)",
+                }}
+              />
+              {/* bright white-violet rim */}
+              <div
+                className="absolute left-1/2 top-0 h-[460px] w-[760px] max-w-[128vw] -translate-x-1/2 rounded-[999px]"
+                style={{
+                  padding: "1.5px",
+                  background:
+                    "conic-gradient(from 180deg at 50% 50%, rgba(220,210,255,0) 0deg, rgba(246,207,255,0.9) 120deg, rgba(188,211,255,0.9) 240deg, rgba(220,210,255,0) 360deg)",
+                  WebkitMask:
+                    "linear-gradient(#000 0 0) content-box, linear-gradient(#000 0 0)",
+                  WebkitMaskComposite: "xor",
+                  maskComposite: "exclude",
+                  filter: "blur(0.3px)",
                 }}
               />
             </div>
           </div>
 
           <motion.div
-            className="relative"
+            className="relative z-10"
             initial={reduce ? undefined : { opacity: 0, y: 30 }}
             animate={reduce ? undefined : { opacity: 1, y: 0 }}
             transition={{ duration: 0.7, ease, delay: 0.5 }}

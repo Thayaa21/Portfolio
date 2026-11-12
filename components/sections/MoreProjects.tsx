@@ -2,6 +2,7 @@ import Image from "next/image";
 import { Github } from "lucide-react";
 import { moreProjects, visibleProjects } from "@/content/site";
 import { GlassCard } from "@/components/ui/GlassCard";
+import { ProjectVisual } from "@/components/ui/ProjectVisual";
 import { Reveal, RevealGroup, RevealItem } from "@/components/ui/Reveal";
 
 export function MoreProjects() {
@@ -20,7 +21,7 @@ export function MoreProjects() {
           {projects.map((p) => (
             <RevealItem key={p.slug}>
               <GlassCard as="article" className="flex h-full flex-col overflow-hidden">
-                {p.image && (
+                {p.image ? (
                   <div className="overflow-hidden border-b border-[var(--color-border)]">
                     <Image
                       src={p.image}
@@ -29,6 +30,12 @@ export function MoreProjects() {
                       height={300}
                       className="h-44 w-full object-cover"
                     />
+                  </div>
+                ) : (
+                  <div className="h-44 overflow-hidden border-b border-[var(--color-border)]">
+                    <div className="flex h-full items-center justify-center [&>div]:aspect-auto [&>div]:h-full [&>div]:w-full [&>div]:rounded-none [&>div]:border-0 [&>div]:bg-transparent">
+                      <ProjectVisual mode="graph" />
+                    </div>
                   </div>
                 )}
                 <div className="flex flex-1 flex-col p-5">

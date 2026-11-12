@@ -15,7 +15,7 @@ export function Work() {
           <p className="font-mono text-[12px] uppercase tracking-[0.08em] text-[var(--color-accent-soft)]">
             {work.eyebrow}
           </p>
-          <h2 className="mt-4 max-w-[640px] font-display text-[30px] font-medium tracking-[-0.028em] md:text-[42px]">
+          <h2 className="mt-4 max-w-[760px] text-balance font-display text-[30px] font-medium tracking-[-0.028em] md:text-[42px]">
             {work.h2}
           </h2>
         </Reveal>
@@ -86,13 +86,13 @@ export function Work() {
                     {/* visual */}
                     <div>
                       {p.image ? (
-                        <div className="overflow-hidden rounded-[22px] border border-[var(--color-border)]">
+                        <div className="relative aspect-[4/3] w-full overflow-hidden rounded-[22px] border border-[var(--color-border)] bg-[var(--color-surface)]">
                           <Image
                             src={p.image}
                             alt={`${p.title} preview`}
-                            width={640}
-                            height={480}
-                            className="h-auto w-full object-cover"
+                            fill
+                            sizes="(max-width: 768px) 100vw, 50vw"
+                            className="object-cover"
                           />
                         </div>
                       ) : p.visual ? (

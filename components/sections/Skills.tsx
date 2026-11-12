@@ -14,8 +14,10 @@ import {
   SiStreamlit,
   SiGithubactions,
   SiGooglecloud,
+  SiPostgresql,
+  SiMeta,
 } from "react-icons/si";
-import { CircleDot, Cloud } from "lucide-react";
+import { CircleDot, Cloud, Database, TrendingUp } from "lucide-react";
 import type { ComponentType, SVGProps } from "react";
 import { skills } from "@/content/site";
 import { GlassCard } from "@/components/ui/GlassCard";
@@ -27,12 +29,17 @@ type SvgIcon = ComponentType<SVGProps<SVGSVGElement>>;
 const iconMap: Record<string, SvgIcon> = {
   python: SiPython,
   cplusplus: SiCplusplus,
+  sql: SiPostgresql,
   typescript: SiTypescript,
   pytorch: SiPytorch,
   huggingface: SiHuggingface,
   scikitlearn: SiScikitlearn,
+  xgboost: TrendingUp,
   langchain: SiLangchain,
   langgraph: SiLangchain,
+  qlora: SiHuggingface,
+  faiss: SiMeta,
+  chromadb: Database,
   fastapi: SiFastapi,
   docker: SiDocker,
   ray: SiRay,
