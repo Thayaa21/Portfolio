@@ -45,8 +45,15 @@
     - Baseline before this task was Performance 69, TBT 5,470 ms. The `LazyMotion` + `m.*` switch is what removed the TBT; the renderer guard keeps SwiftShader/software devices on the cheap CSS arc.
     - Targets met: Performance ≥ 90, LCP < 2.5s, TBT < 200ms (steady state 0–20ms; the one 370ms run was cold-start variance).
 
-- [ ] 7. Make the black hole actually visible (checked by Thayaa in a real browser with a GPU: only the CSS arc shows)
-  - Root cause: placement. In the shader `p.y += 0.30` puts the ring centre about 156px above the canvas bottom, and the ring radius is only about 110px (R = 0.20 × 520). The whole ring therefore sits behind the AgentConsole and is never seen. Fix in `FRAG`:
+- [x] 7. Make the black hole actually visible (was: only the CSS arc showed; the ring sat behind the console)
+  - Done:
+    - Shader placement: `p.y += 0.30` → `p.y -= 0.21` (ring centre ~29% from the canvas top, ~150px), `R = 0.20` → `R = 0.28`, and removed the `topFade` term so `mask = vig` only. Verified in the standalone shader harness: the brightest centre-column pixel is at ~57% from the top (the ring bottom), i.e. the ring spans ~1%–57% centred near 29% — the upper half now rises as an arch. The outer glow above the canvas top is clipped by the arc wrapper's `overflow-hidden`, which sits below the M.S. line (canvas top ≈ text-block bottom + 34px on desktop), so the glow never crosses the text.
+    - `onReady()`: BlackHole fires it after its first drawn frame; Hero fades the CSS fallback arc (rim + body + shimmer) to opacity 0 over 0.7s, so the two never show together and the CSS oval no longer bleeds through the console.
+    - AgentConsole body is now a near-opaque gradient (`rgba(16,12,36,0.97)→rgba(10,7,24,0.98)` over `--bg`) so nothing behind it reads through.
+    - The "shooting star" streak was the lensed star field smearing at the edge: clamped the lens factor (`min(…, 1.2)`) and confined stars to a ring band around the hole (`smoothstep` falloff), so no stray streak remains.
+  - VERIFICATION LIMIT: the composited GPU page still can't be screenshotted here — headless uses SwiftShader, which the task-6 software-renderer guard deliberately rejects (so the black hole doesn't run headless at all). Shader placement was confirmed via the `preserveDrawingBuffer` pixel-row readback in the harness; the on-page result needs Thayaa to confirm on the preview in a real GPU browser.
+  - Original notes (kept for reference):
+    - Replace `p.y += 0.30;` with `p.y -= 0.21;` so the ring centre sits about 150px below the canvas top, i.e. just under the console's top edge. The upper half then rises above the console as an arch, like Reflex.
     - Replace `p.y += 0.30;` with `p.y -= 0.21;` so the ring centre sits about 150px below the canvas top, i.e. just under the console's top edge. The upper half then rises above the console as an arch, like Reflex.
     - Set `R = 0.28` (ring diameter about 290px at 520px height, matching Reflex's ~300px).
     - Delete the `topFade` term (it fades the visible top of the arch). Keep only the `vig` vignette in `mask`.

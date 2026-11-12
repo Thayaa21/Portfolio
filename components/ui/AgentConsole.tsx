@@ -80,7 +80,11 @@ export function AgentConsole() {
       ref={ref}
       aria-hidden="true"
       className="glass mx-auto w-full max-w-[760px] overflow-hidden rounded-[22px]"
-      style={{ background: "var(--color-surface-solid)" }}
+      style={{
+        // Near-opaque so the black hole behind never reads through the body.
+        background:
+          "linear-gradient(180deg, rgba(16,12,36,0.97), rgba(10,7,24,0.98)), var(--color-bg)",
+      }}
     >
       {/* header */}
       <div className="flex items-center justify-between border-b border-[var(--color-border)] px-5 py-3.5">

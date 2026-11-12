@@ -62,23 +62,28 @@ float starLayer(vec2 q, float density, float rate) {
 
 void main() {
   vec2 p = (gl_FragCoord.xy - 0.5 * u_res) / u_res.y;
-  // centre low so the console covers the lower half; nudge toward pointer
-  p.y += 0.30;
+  // Ring centre sits ~150px below the canvas top (just under the console's
+  // top edge) so the upper half rises above the console as an arch.
+  p.y -= 0.21;
   p -= u_mouse * 0.02;
 
   float r = length(p);
   float a = atan(p.y, p.x);
 
-  // gravitational lensing of the star field
-  vec2 q = p * (1.0 + 0.045 / (r * r + 0.002));
+  // gravitational lensing of the star field (clamped so edge stars don't
+  // smear into a diagonal streak)
+  float lens = min(0.045 / (r * r + 0.002), 1.2);
+  vec2 q = p * (1.0 + lens);
 
   vec3 col = BG;
 
-  // stars (2 layers), hidden later by the horizon
+  // stars (2 layers), hidden later by the horizon. Confined to a ring around
+  // the hole and faded out at the far field so no stray streak appears.
+  float starField = smoothstep(0.9, 0.35, r) * smoothstep(0.24, 0.34, r);
   float stars = starLayer(q, 9.0, 2.3) + starLayer(q + 3.7, 15.0, 1.6) * 0.7;
-  col += STAR * stars * 0.9;
+  col += STAR * stars * starField * 0.9;
 
-  float R = 0.20;
+  float R = 0.28;
 
   // halo
   col += BAND3 * exp(-max(r - R, 0.0) * 5.5) * 0.35;
@@ -101,10 +106,10 @@ void main() {
   // tone map
   col = vec3(1.0) - exp(-col * 1.4);
 
-  // keep it an arch: fade the top and the far field back to background
-  float topFade = smoothstep(-0.05, 0.45, p.y + 0.30);
+  // Vignette the far field back to background (no top fade: the upper half
+  // of the ring must stay visible as the arch).
   float vig = smoothstep(1.1, 0.3, r);
-  float mask = clamp(topFade, 0.0, 1.0) * vig;
+  float mask = vig;
   col = mix(BG, col, mask);
 
   // Alpha from brightness above BG plus the horizon, so the canvas
@@ -158,10 +163,18 @@ function onIdle(cb: () => void): () => void {
   return () => window.clearTimeout(t);
 }
 
-export function BlackHole({ className = "" }: { className?: string }) {
+export function BlackHole({
+  className = "",
+  onReady,
+}: {
+  className?: string;
+  onReady?: () => void;
+}) {
   const reduce = useReducedMotion();
   const canvasRef = useRef<HTMLCanvasElement>(null);
   const mouse = useRef({ x: 0, y: 0, tx: 0, ty: 0 });
+  const readyRef = useRef(onReady);
+  readyRef.current = onReady;
 
   useEffect(() => {
     if (!deviceAllowsWebGL()) return; // Save-Data / low-core → CSS arc
@@ -250,6 +263,7 @@ export function BlackHole({ className = "" }: { className?: string }) {
       gl.viewport(0, 0, cv.width, cv.height);
     };
 
+    let signalled = false;
     const draw = (tSeconds: number) => {
       gl.clearColor(0, 0, 0, 0);
       gl.clear(gl.COLOR_BUFFER_BIT);
@@ -257,6 +271,10 @@ export function BlackHole({ className = "" }: { className?: string }) {
       gl.uniform2f(uRes, cv.width, cv.height);
       gl.uniform2f(uMouse, mouse.current.x, mouse.current.y);
       gl.drawArrays(gl.TRIANGLES, 0, 3);
+      if (!signalled) {
+        signalled = true;
+        readyRef.current?.(); // first good frame → Hero can hide the CSS arc
+      }
     };
 
     const ro = new ResizeObserver(resize);
