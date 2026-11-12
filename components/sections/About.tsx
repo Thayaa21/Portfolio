@@ -5,6 +5,7 @@ import { useRef } from "react";
 import { motion, useReducedMotion, useScroll, useTransform } from "motion/react";
 import { about, identity } from "@/content/site";
 import { GlassCard } from "@/components/ui/GlassCard";
+import { CountUp } from "@/components/ui/CountUp";
 import { Reveal, RevealGroup, RevealItem } from "@/components/ui/Reveal";
 
 export function About() {
@@ -84,7 +85,7 @@ export function About() {
                 <RevealItem key={f.label}>
                   <GlassCard className="h-full p-4">
                     <div className="font-display text-[clamp(28px,4vw,40px)] font-medium leading-none text-[var(--color-text)]">
-                      {f.value}
+                      <CountUp value={f.value} />
                     </div>
                     <p className="mt-2 text-[12px] leading-snug text-[var(--color-text-muted)]">
                       {f.label}

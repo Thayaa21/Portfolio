@@ -1,7 +1,8 @@
 import { Bot, Search, SlidersHorizontal, Phone, Workflow, Cpu } from "lucide-react";
 import type { LucideIcon } from "lucide-react";
 import { capabilities } from "@/content/site";
-import { Reveal, RevealGroup, RevealItem } from "@/components/ui/Reveal";
+import { RevealGroup, RevealItem } from "@/components/ui/Reveal";
+import { SplitText } from "@/components/ui/SplitText";
 
 const iconMap: Record<string, LucideIcon> = {
   bot: Bot,
@@ -16,11 +17,11 @@ export function Capabilities() {
   return (
     <section id="capabilities" className="section">
       <div className="container-content">
-        <Reveal>
-          <h2 className="font-display text-[30px] font-medium tracking-[-0.028em] md:text-[42px]">
-            {capabilities.h2}
-          </h2>
-        </Reveal>
+        <SplitText
+          as="h2"
+          text={capabilities.h2}
+          className="font-display text-[30px] font-medium tracking-[-0.028em] md:text-[42px]"
+        />
 
         <RevealGroup className="mt-10 grid grid-cols-1 overflow-hidden rounded-[22px] border border-[var(--color-border)] sm:grid-cols-2 lg:grid-cols-3">
           {capabilities.cards.map((card) => {

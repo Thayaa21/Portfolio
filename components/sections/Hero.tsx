@@ -1,41 +1,58 @@
 "use client";
 
-import { motion, useReducedMotion, type Variants } from "motion/react";
+import { useRef, type PointerEvent } from "react";
+import {
+  motion,
+  useMotionValue,
+  useSpring,
+  useInView,
+  useReducedMotion,
+} from "motion/react";
 import { ArrowRight } from "lucide-react";
 import { hero } from "@/content/site";
 import { Button } from "@/components/ui/Button";
-import { GradientText } from "@/components/ui/GradientText";
+import { MagneticButton } from "@/components/ui/MagneticButton";
+import { SplitText, FadeUp } from "@/components/ui/SplitText";
 import { AgentConsole } from "@/components/ui/AgentConsole";
-
-const ease = [0.22, 1, 0.36, 1] as const;
+import { ease, spring } from "@/lib/motion";
 
 export function Hero({ hasResume }: { hasResume: boolean }) {
   const reduce = useReducedMotion();
-  const words = hero.h1Pre.trim().split(" ");
+  const sectionRef = useRef<HTMLElement>(null);
+  const inView = useInView(sectionRef, { margin: "0px" });
+  const paused = !inView;
 
-  const container: Variants = {
-    hidden: {},
-    show: { transition: { staggerChildren: 0.06, delayChildren: 0.1 } },
+  // pointer parallax for the arc + glow
+  const px = useMotionValue(0);
+  const py = useMotionValue(0);
+  const ax = useSpring(px, spring);
+  const ay = useSpring(py, spring);
+
+  const onPointerMove = (e: PointerEvent<HTMLElement>) => {
+    if (reduce) return;
+    const r = e.currentTarget.getBoundingClientRect();
+    const nx = (e.clientX - (r.left + r.width / 2)) / (r.width / 2);
+    const ny = (e.clientY - (r.top + r.height / 2)) / (r.height / 2);
+    px.set(Math.max(-1, Math.min(1, nx)) * 12);
+    py.set(Math.max(-1, Math.min(1, ny)) * 12);
   };
-  const item: Variants = {
-    hidden: { opacity: 0, y: 16 },
-    show: { opacity: 1, y: 0, transition: { duration: 0.6, ease } },
+  const onPointerLeave = () => {
+    px.set(0);
+    py.set(0);
   };
 
   return (
     <section
+      ref={sectionRef}
       id="top"
+      onPointerMove={onPointerMove}
+      onPointerLeave={onPointerLeave}
       className="relative overflow-hidden pt-32 pb-20 md:pt-40 md:pb-28"
     >
       <div className="container-content relative">
-        <motion.div
-          className="mx-auto max-w-[840px] text-center"
-          variants={container}
-          initial={reduce ? undefined : "hidden"}
-          animate={reduce ? undefined : "show"}
-        >
+        <div className="mx-auto max-w-[840px] text-center">
           {/* announcement pill */}
-          <motion.div variants={item}>
+          <FadeUp delay={0}>
             <a
               href={hero.pillHref}
               className="inline-flex items-center gap-2 rounded-[99px] border border-[var(--color-border)] bg-[var(--color-surface)] px-4 py-1.5 font-mono text-[12px] uppercase tracking-[0.08em] text-[var(--color-text-2)] transition-colors hover:border-[var(--color-border-accent)]"
@@ -43,79 +60,63 @@ export function Hero({ hasResume }: { hasResume: boolean }) {
               <span className="status-dot inline-block h-1.5 w-1.5 rounded-full bg-[var(--color-success)]" />
               {hero.pill.replace("● ", "")}
             </a>
-          </motion.div>
+          </FadeUp>
 
           {/* H1 */}
-          <h1 className="mt-7 font-display text-[40px] font-medium leading-[1.05] tracking-[-0.035em] md:text-[64px]">
-            {reduce ? (
-              <>
-                {hero.h1Pre}
-                <GradientText>{hero.h1Gradient}</GradientText>
-              </>
-            ) : (
-              <>
-                {words.map((w, i) => (
-                  <motion.span
-                    key={i}
-                    variants={{
-                      hidden: { opacity: 0, y: 20 },
-                      show: {
-                        opacity: 1,
-                        y: 0,
-                        transition: { duration: 0.5, ease, delay: 0.1 + i * 0.04 },
-                      },
-                    }}
-                    className="inline-block"
-                  >
-                    {w}&nbsp;
-                  </motion.span>
-                ))}
-                <motion.span variants={item} className="inline-block">
-                  <GradientText>{hero.h1Gradient}</GradientText>
-                </motion.span>
-              </>
-            )}
-          </h1>
+          <SplitText
+            as="h1"
+            text={hero.h1Pre.trim()}
+            highlight={hero.h1Gradient}
+            delayChildren={0.1}
+            className="mt-7 font-display text-[40px] font-medium leading-[1.05] tracking-[-0.035em] md:text-[64px]"
+          />
 
           {/* subhead */}
-          <motion.p
-            variants={item}
+          <FadeUp
+            as="p"
+            delay={0.2}
             className="mx-auto mt-6 max-w-[620px] text-[17px] text-[var(--color-text-muted)]"
           >
             {hero.subhead}
-          </motion.p>
+          </FadeUp>
 
           {/* buttons */}
-          <motion.div
-            variants={item}
+          <FadeUp
+            delay={0.3}
             className="mt-8 flex flex-col items-center justify-center gap-3 sm:flex-row"
           >
-            <Button href={hero.primaryCta.href} variant="primary">
+            <MagneticButton href={hero.primaryCta.href} variant="primary">
               {hero.primaryCta.label}
               <ArrowRight size={16} />
-            </Button>
+            </MagneticButton>
             {hasResume && (
               <Button href={hero.ghostCta.href} variant="ghost" external>
                 {hero.ghostCta.label}
               </Button>
             )}
-          </motion.div>
+          </FadeUp>
 
           {/* small mono line */}
-          <motion.p
-            variants={item}
+          <FadeUp
+            as="p"
+            delay={0.4}
             className="mt-6 font-mono text-[12px] uppercase tracking-[0.06em] text-[var(--color-text-muted)]"
           >
             {hero.smallLine}
-          </motion.p>
-        </motion.div>
+          </FadeUp>
+        </div>
 
         {/* glowing arc + console */}
-        <div className="relative mt-24 md:mt-32">
-          {/* glowing arc: rises behind the console, which overlaps its lower edge */}
-          <div
+        <div className="relative mt-28 md:mt-36">
+          {/* glowing arc: rises behind the console, which overlaps its lower edge.
+              top clamps the arc below the M.S. line so it never crosses the text. */}
+          <motion.div
             aria-hidden="true"
-            className="pointer-events-none absolute inset-x-0 bottom-0 top-[-180px] flex items-start justify-center overflow-hidden md:top-[-240px]"
+            style={reduce ? undefined : { x: ax, y: ay }}
+            initial={reduce ? undefined : { opacity: 0, y: 40, scale: 0.96 }}
+            animate={reduce ? undefined : { opacity: 1, y: 0, scale: 1 }}
+            transition={{ duration: 0.9, ease, delay: 0.3 }}
+            className="pointer-events-none absolute inset-x-0 bottom-0 top-[-90px] flex items-start justify-center overflow-hidden md:top-[-110px]"
           >
             <div className="relative h-[460px] w-[900px] max-w-[150vw]">
               {/* soft ambient bloom */}
@@ -148,11 +149,30 @@ export function Hero({ hasResume }: { hasResume: boolean }) {
                   filter: "blur(0.3px)",
                 }}
               />
+              {/* shimmer sweep travelling along the rim */}
+              {!reduce && (
+                <div
+                  className={`hero-arc-shimmer absolute left-1/2 top-0 h-[460px] w-[760px] max-w-[128vw] -translate-x-1/2 rounded-[999px] ${
+                    paused ? "motion-paused" : ""
+                  }`}
+                  style={{
+                    padding: "1.5px",
+                    background:
+                      "conic-gradient(from 0deg at 50% 50%, rgba(255,255,255,0) 0deg, rgba(255,255,255,0.85) 20deg, rgba(255,255,255,0) 60deg, rgba(255,255,255,0) 360deg)",
+                    WebkitMask:
+                      "linear-gradient(#000 0 0) content-box, linear-gradient(#000 0 0)",
+                    WebkitMaskComposite: "xor",
+                    maskComposite: "exclude",
+                  }}
+                />
+              )}
             </div>
-          </div>
+          </motion.div>
 
           <motion.div
-            className="relative z-10"
+            className={`relative z-10 ${reduce ? "" : "hero-console-float"} ${
+              paused ? "motion-paused" : ""
+            }`}
             initial={reduce ? undefined : { opacity: 0, y: 30 }}
             animate={reduce ? undefined : { opacity: 1, y: 0 }}
             transition={{ duration: 0.7, ease, delay: 0.5 }}
