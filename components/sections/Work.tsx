@@ -84,8 +84,10 @@ function WorkPanel({
   const panelInner = (
     <GlassCard
       radius="panel"
-      className="p-6 md:p-10"
-      style={{ background: "var(--color-surface-solid)" }}
+      className="work-panel p-6 md:p-10"
+      style={{
+        background: "linear-gradient(180deg, #0D0924, #080518)",
+      }}
     >
       <div
         className={`grid items-center gap-8 md:grid-cols-2 md:gap-12 ${

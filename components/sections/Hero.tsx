@@ -10,11 +10,18 @@ import {
 } from "motion/react";
 import { ArrowRight } from "lucide-react";
 import { hero } from "@/content/site";
+import dynamic from "next/dynamic";
 import { Button } from "@/components/ui/Button";
 import { MagneticButton } from "@/components/ui/MagneticButton";
-import { SplitText, FadeUp } from "@/components/ui/SplitText";
 import { AgentConsole } from "@/components/ui/AgentConsole";
 import { ease, spring } from "@/lib/motion";
+
+// The WebGL black hole is decorative and heavy; load it after the hero
+// paints so it never blocks LCP. The CSS arc shows until it mounts.
+const BlackHole = dynamic(
+  () => import("@/components/ui/BlackHole").then((m) => m.BlackHole),
+  { ssr: false }
+);
 
 export function Hero({ hasResume }: { hasResume: boolean }) {
   const reduce = useReducedMotion();
@@ -50,40 +57,40 @@ export function Hero({ hasResume }: { hasResume: boolean }) {
       className="relative overflow-hidden pt-32 pb-20 md:pt-40 md:pb-28"
     >
       <div className="container-content relative">
+        {/* Text is server-rendered and visible on first paint; the CSS
+            `hero-in` entrance only nudges transform/filter, so it counts
+            for LCP immediately instead of waiting for hydration. */}
         <div className="mx-auto max-w-[840px] text-center">
           {/* announcement pill */}
-          <FadeUp delay={0}>
-            <a
-              href={hero.pillHref}
-              className="inline-flex items-center gap-2 rounded-[99px] border border-[var(--color-border)] bg-[var(--color-surface)] px-4 py-1.5 font-mono text-[12px] uppercase tracking-[0.08em] text-[var(--color-text-2)] transition-colors hover:border-[var(--color-border-accent)]"
-            >
-              <span className="status-dot inline-block h-1.5 w-1.5 rounded-full bg-[var(--color-success)]" />
-              {hero.pill.replace("● ", "")}
-            </a>
-          </FadeUp>
+          <a
+            href={hero.pillHref}
+            className="hero-in inline-flex items-center gap-2 rounded-[99px] border border-[var(--color-border)] bg-[var(--color-surface)] px-4 py-1.5 font-mono text-[12px] uppercase tracking-[0.08em] text-[var(--color-text-2)] transition-colors hover:border-[var(--color-border-accent)]"
+          >
+            <span className="status-dot inline-block h-1.5 w-1.5 rounded-full bg-[var(--color-success)]" />
+            {hero.pill.replace("● ", "")}
+          </a>
 
           {/* H1 */}
-          <SplitText
-            as="h1"
-            text={hero.h1Pre.trim()}
-            highlight={hero.h1Gradient}
-            delayChildren={0.1}
-            className="mt-7 font-display text-[40px] font-medium leading-[1.05] tracking-[-0.035em] md:text-[64px]"
-          />
+          <h1
+            className="hero-in mt-7 font-display text-[40px] font-medium leading-[1.05] tracking-[-0.035em] md:text-[64px]"
+            style={{ animationDelay: "0.06s" }}
+          >
+            {hero.h1Pre}
+            <span className="grad-text">{hero.h1Gradient}</span>
+          </h1>
 
           {/* subhead */}
-          <FadeUp
-            as="p"
-            delay={0.2}
-            className="mx-auto mt-6 max-w-[620px] text-[17px] text-[var(--color-text-muted)]"
+          <p
+            className="hero-in mx-auto mt-6 max-w-[620px] text-[17px] text-[var(--color-text-muted)]"
+            style={{ animationDelay: "0.14s" }}
           >
             {hero.subhead}
-          </FadeUp>
+          </p>
 
           {/* buttons */}
-          <FadeUp
-            delay={0.3}
-            className="mt-8 flex flex-col items-center justify-center gap-3 sm:flex-row"
+          <div
+            className="hero-in mt-8 flex flex-col items-center justify-center gap-3 sm:flex-row"
+            style={{ animationDelay: "0.22s" }}
           >
             <MagneticButton href={hero.primaryCta.href} variant="primary">
               {hero.primaryCta.label}
@@ -94,16 +101,15 @@ export function Hero({ hasResume }: { hasResume: boolean }) {
                 {hero.ghostCta.label}
               </Button>
             )}
-          </FadeUp>
+          </div>
 
           {/* small mono line */}
-          <FadeUp
-            as="p"
-            delay={0.4}
-            className="mt-6 font-mono text-[12px] uppercase tracking-[0.06em] text-[var(--color-text-muted)]"
+          <p
+            className="hero-in mt-6 font-mono text-[12px] uppercase tracking-[0.06em] text-[var(--color-text-muted)]"
+            style={{ animationDelay: "0.3s" }}
           >
             {hero.smallLine}
-          </FadeUp>
+          </p>
         </div>
 
         {/* glowing arc + console */}
@@ -166,6 +172,11 @@ export function Hero({ hasResume }: { hasResume: boolean }) {
                   }}
                 />
               )}
+
+              {/* WebGL2 black hole on top: composites over the CSS arc, which
+                  is the fallback when WebGL2 is unavailable or reduced motion.
+                  It self-manages its render loop (pauses off-screen / tab hidden). */}
+              <BlackHole className="absolute left-1/2 top-0 h-[520px] w-[900px] max-w-[150vw] -translate-x-1/2" />
             </div>
           </motion.div>
 

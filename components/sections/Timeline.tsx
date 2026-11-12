@@ -37,7 +37,7 @@ export function Timeline({
         <div className="grid gap-8 md:grid-cols-[220px_1fr] md:gap-12">
           <div>
             <Reveal>
-              <SectionLabel>{label}</SectionLabel>
+              <SectionLabel as="h2">{label}</SectionLabel>
             </Reveal>
           </div>
 

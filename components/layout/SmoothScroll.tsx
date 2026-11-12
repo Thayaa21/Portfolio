@@ -8,8 +8,23 @@ import {
   useState,
   type ReactNode,
 } from "react";
-import Lenis from "lenis";
+import type LenisType from "lenis";
 import { useReducedMotion } from "motion/react";
+
+// Run after the browser is idle so the Lenis chunk and its rAF loop never
+// block first paint / LCP.
+function onIdle(cb: () => void): () => void {
+  const w = window as Window & {
+    requestIdleCallback?: (cb: () => void) => number;
+    cancelIdleCallback?: (id: number) => void;
+  };
+  if (typeof w.requestIdleCallback === "function") {
+    const id = w.requestIdleCallback(cb);
+    return () => w.cancelIdleCallback?.(id);
+  }
+  const t = window.setTimeout(cb, 200);
+  return () => window.clearTimeout(t);
+}
 
 type ScrollTarget = string | number | HTMLElement;
 
@@ -39,7 +54,7 @@ const NAV_OFFSET = -80;
 
 export function SmoothScroll({ children }: { children: ReactNode }) {
   const reduce = useReducedMotion();
-  const lenisRef = useRef<Lenis | null>(null);
+  const lenisRef = useRef<LenisType | null>(null);
   const [ctx, setCtx] = useState<SmoothScrollContextValue | null>(null);
 
   useEffect(() => {
@@ -49,29 +64,36 @@ export function SmoothScroll({ children }: { children: ReactNode }) {
       return;
     }
 
-    const lenis = new Lenis({
-      duration: 1.1,
-      easing: (t: number) => 1 - Math.pow(2, -10 * t), // expo-out
-    });
-    lenisRef.current = lenis;
-
     let raf = 0;
-    const loop = (time: number) => {
-      lenis.raf(time);
-      raf = requestAnimationFrame(loop);
-    };
-    raf = requestAnimationFrame(loop);
+    let lenis: LenisType | null = null;
+    let cancelled = false;
 
-    setCtx({
-      scrollTo: (target, options) =>
-        lenis.scrollTo(target, {
-          offset: options?.offset ?? NAV_OFFSET,
-        }),
+    const cancelIdle = onIdle(async () => {
+      const { default: Lenis } = await import("lenis");
+      if (cancelled) return;
+      lenis = new Lenis({
+        duration: 1.1,
+        easing: (t: number) => 1 - Math.pow(2, -10 * t), // expo-out
+      });
+      lenisRef.current = lenis;
+
+      const loop = (time: number) => {
+        lenis!.raf(time);
+        raf = requestAnimationFrame(loop);
+      };
+      raf = requestAnimationFrame(loop);
+
+      setCtx({
+        scrollTo: (target, options) =>
+          lenis!.scrollTo(target, { offset: options?.offset ?? NAV_OFFSET }),
+      });
     });
 
     return () => {
+      cancelled = true;
+      cancelIdle();
       cancelAnimationFrame(raf);
-      lenis.destroy();
+      lenis?.destroy();
       lenisRef.current = null;
     };
   }, [reduce]);

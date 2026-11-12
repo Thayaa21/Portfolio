@@ -67,9 +67,9 @@ export function About() {
           {/* right: text + cards */}
           <div>
             <Reveal>
-              <p className="font-mono text-[12px] uppercase tracking-[0.08em] text-[var(--color-accent-soft)]">
+              <h2 className="m-0 font-mono text-[12px] font-medium uppercase tracking-[0.08em] text-[var(--color-accent-soft)]">
                 {about.eyebrow}
-              </p>
+              </h2>
             </Reveal>
             <RevealGroup className="mt-5 space-y-4">
               {about.paragraphs.map((p, i) => (
