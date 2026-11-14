@@ -1,7 +1,7 @@
 "use client";
 
 import type { ReactNode } from "react";
-import { motion, useReducedMotion } from "motion/react";
+import { m, useReducedMotion } from "motion/react";
 
 const ease = [0.22, 1, 0.36, 1] as const;
 
@@ -17,7 +17,7 @@ export function Reveal({
   as?: "div" | "section" | "li" | "article";
 }) {
   const reduce = useReducedMotion();
-  const MotionTag = motion[as];
+  const MotionTag = m[as];
 
   if (reduce) {
     const Tag = as;
@@ -47,7 +47,7 @@ export function RevealGroup({
   as?: "div" | "section" | "ul";
 }) {
   const reduce = useReducedMotion();
-  const MotionTag = motion[as];
+  const MotionTag = m[as];
 
   if (reduce) {
     const Tag = as;
@@ -80,7 +80,7 @@ export function RevealItem({
   as?: "div" | "li" | "article";
 }) {
   const reduce = useReducedMotion();
-  const MotionTag = motion[as];
+  const MotionTag = m[as];
 
   if (reduce) {
     const Tag = as;

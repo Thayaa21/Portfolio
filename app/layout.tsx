@@ -6,6 +6,7 @@ import { Nav } from "@/components/layout/Nav";
 import { Footer } from "@/components/layout/Footer";
 import { SmoothScroll } from "@/components/layout/SmoothScroll";
 import { ScrollProgress } from "@/components/layout/ScrollProgress";
+import { MotionProvider } from "@/components/layout/MotionProvider";
 import { identity, hero } from "@/content/site";
 import { resumeExists, siteUrl } from "@/lib/utils";
 
@@ -85,13 +86,15 @@ export default function RootLayout({
           type="application/ld+json"
           dangerouslySetInnerHTML={{ __html: JSON.stringify(jsonLd) }}
         />
-        <SmoothScroll>
-          <ScrollProgress />
-          <Background />
-          <Nav hasResume={hasResume} />
-          <main>{children}</main>
-          <Footer />
-        </SmoothScroll>
+        <MotionProvider>
+          <SmoothScroll>
+            <ScrollProgress />
+            <Background />
+            <Nav hasResume={hasResume} />
+            <main>{children}</main>
+            <Footer />
+          </SmoothScroll>
+        </MotionProvider>
       </body>
     </html>
   );

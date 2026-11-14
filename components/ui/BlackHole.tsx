@@ -7,7 +7,7 @@ const VERT = `#version 300 es
 in vec2 a_pos;
 void main() { gl_Position = vec4(a_pos, 0.0, 1.0); }`;
 
-// Reflex-style black hole: lensed twinkling stars, a dark event horizon,
+// Reflex-style (Gargantua) black hole: dark horizon, lensed arcs, flat disk;
 // a thin photon ring, three turbulent violet accretion bands and a halo,
 // tone-mapped onto the page background.
 const FRAG = `#version 300 es
@@ -18,102 +18,70 @@ uniform vec2  u_res;
 uniform float u_time;
 uniform vec2  u_mouse;
 
-const vec3 BG      = vec3(0.016, 0.0, 0.078);   // #040014
-const vec3 HORIZON = vec3(0.047, 0.020, 0.188); // #0C0530
-const vec3 STAR    = vec3(0.957, 0.941, 1.0);   // #F4F0FF
-const vec3 RINGLO  = vec3(1.0);                 // #FFFFFF
-const vec3 RINGHI  = vec3(0.863, 0.824, 1.0);   // #DCD2FF
-const vec3 BAND1   = vec3(0.749, 0.694, 1.0);   // #BFB1FF
-const vec3 BAND2   = vec3(0.541, 0.447, 1.0);   // #8A72FF
-const vec3 BAND3   = vec3(0.486, 0.361, 1.0);   // #7C5CFF
+// Gargantua-style black hole, tuned side by side against
+// reflex-template.framer.ai. Geometry is in "reference px" (Reflex's
+// layout), scaled to this canvas. Disk line = canvas row at CY from the top.
+const float CY = 0.5143;
 
-float hash21(vec2 p) {
-  p = fract(p * vec2(123.34, 456.21));
-  p += dot(p, p + 45.32);
-  return fract(p.x * p.y);
-}
-
-// simple value-noise fbm
-float noise(vec2 p) {
-  vec2 i = floor(p), f = fract(p);
-  float a = hash21(i);
-  float b = hash21(i + vec2(1.0, 0.0));
-  float c = hash21(i + vec2(0.0, 1.0));
-  float d = hash21(i + vec2(1.0, 1.0));
-  vec2 u = f * f * (3.0 - 2.0 * f);
-  return mix(mix(a, b, u.x), mix(c, d, u.x), u.y);
-}
-float fbm(vec2 p) {
-  float v = 0.0, amp = 0.5;
-  for (int i = 0; i < 4; i++) { v += amp * noise(p); p *= 2.0; amp *= 0.5; }
-  return v;
-}
-
-float starLayer(vec2 q, float density, float rate) {
-  vec2 g = q * density;
-  vec2 cell = floor(g);
-  float h = hash21(cell);
-  vec2 center = cell + 0.5 + 0.35 * vec2(hash21(cell + 1.3) - 0.5, hash21(cell + 7.1) - 0.5);
-  float d = length(g - center);
-  float star = smoothstep(0.08, 0.0, d) * step(0.78, h);
-  float tw = 0.6 + 0.4 * sin(u_time * rate + h * 6.2831);
-  return star * tw;
-}
+vec3 C(float r, float g, float b) { return vec3(r, g, b) / 255.0; }
+float G(float v, float w) { float d = v / w; return exp(-d * d); }
 
 void main() {
-  vec2 p = (gl_FragCoord.xy - 0.5 * u_res) / u_res.y;
-  // centre low so the console covers the lower half; nudge toward pointer
-  p.y += 0.30;
-  p -= u_mouse * 0.02;
+  float H = u_res.y;
+  float s = (H / 700.0) * 0.85;                 // canvas px per reference px
+  vec2 c = vec2(0.5 * u_res.x, H * (1.0 - CY));
+  vec2 q = (gl_FragCoord.xy - c) / s - u_mouse * 8.0;
+  float x = q.x, y = q.y;
+  float ya = max(y, 0.0);
+  float above = step(0.0, y);
+  float t = u_time;
 
-  float r = length(p);
-  float a = atan(p.y, p.x);
+  // lensed arcs flare outward where they meet the disk
+  float flare = 1.0 + 0.38 * exp(-ya / 16.0);
+  float d  = length(vec2(x / flare, y));
+  float d0 = length(q);
+  float dop   = 1.0 + 0.12 * tanh(x / 250.0);
+  float flick = 0.93 + 0.07 * sin(t * 0.8 + x * 0.01);
+  float k = above * dop * flick;
 
-  // gravitational lensing of the star field
-  vec2 q = p * (1.0 + 0.045 / (r * r + 0.002));
+  vec3 col = vec3(0.0);
+  col += C(241.0, 236.0, 255.0) * G(d - 150.0, 4.0) * 1.30 * k;
+  col += C(185.0, 166.0, 255.0) * G(d - 154.0, 7.0) * 0.45 * k;
+  col += C(143.0, 107.0, 255.0) * G(d - 176.0, 6.0) * 0.95 * k;
+  col += C(106.0,  69.0, 240.0) * G(d - 194.0, 14.0) * 0.50 * k;
+  col += C(106.0,  69.0, 240.0) * exp(-max(d - 150.0, 0.0) / 60.0) * 0.55 * above * step(176.0, d);
+  col += C( 42.0,  22.0, 112.0) * 0.08 * above * step(118.0, d0) * step(d, 150.0);
 
-  vec3 col = BG;
+  // bright wings at the base of the arcs
+  col += C(233.0, 226.0, 255.0) * exp(-ya / 20.0) * G(abs(x) - 205.0, 85.0) * 0.85 * above * dop;
 
-  // stars (2 layers), hidden later by the horizon
-  float stars = starLayer(q, 9.0, 2.3) + starLayer(q + 3.7, 15.0, 1.6) * 0.7;
-  col += STAR * stars * 0.9;
+  // accretion disk: thin core, thick lumpy haze, lavender inner haze
+  float lump = 0.75 + 0.25 * (0.6 * sin(x * 0.045 + t * 0.6) + 0.4 * sin(x * 0.11 - t * 0.42));
+  col += vec3(1.0) * G(y, 2.0) * exp(-pow(abs(x) / 330.0, 1.6)) * 0.45 * dop;
+  col += C(118.0, 80.0, 255.0) * G(y - 16.0, 28.0) * exp(-pow(abs(x) / 440.0, 1.4)) * lump * 1.5 * dop;
+  col += C(201.0, 187.0, 255.0) * G(y - 9.6, 15.4) * G(abs(x) - 205.0, 153.0) * 0.55 * dop;
 
-  float R = 0.20;
+  // underside ring (shows through the glass console)
+  col += C(143.0, 107.0, 255.0) * G(length(vec2(x, y + 80.0)) - 110.0, 12.0) * 0.22 * (1.0 - above);
 
-  // halo
-  col += BAND3 * exp(-max(r - R, 0.0) * 5.5) * 0.35;
+  col = vec3(1.0) - exp(-col * 1.3);
+  float alpha = clamp(max(col.r, max(col.g, col.b)) * 1.5, 0.0, 1.0);
 
-  // accretion bands (gaussian rings, turbulent, side-brightened)
-  float turb = mix(0.55, 1.0, fbm(vec2(a * 3.0 + u_time * 0.12, r * 9.0 - u_time * 0.05)));
-  float side = 1.0 + 0.35 * cos(a - u_time * 0.3);
-  col += BAND1 * exp(-pow((r - R * 1.18) / 0.018, 2.0)) * 0.9 * turb * side;
-  col += BAND2 * exp(-pow((r - R * 1.34) / 0.03,  2.0)) * 0.6 * turb * side;
-  col += BAND3 * exp(-pow((r - R * 1.55) / 0.05,  2.0)) * 0.35 * turb * side;
+  // event horizon (opaque) with a faint rim
+  float hole = above * (1.0 - smoothstep(117.0, 119.5, d0));
+  col = mix(col, C(6.0, 2.0, 15.0), hole);
+  alpha = mix(alpha, 1.0, hole);
+  col += C(59.0, 42.0, 138.0) * G(d0 - 115.0, 2.5) * 0.35 * above;
 
-  // photon ring
-  float ring = exp(-pow((r - R * 1.06) / 0.0055, 2.0)) * 1.6;
-  col += mix(RINGLO, RINGHI, 0.5 + 0.5 * sin(a + u_time * 0.2)) * ring;
+  // fade into the page at the canvas edges
+  float fromTop  = (u_res.y - gl_FragCoord.y) / H;
+  float fromBot  = gl_FragCoord.y / H;
+  float fromSide = min(gl_FragCoord.x, u_res.x - gl_FragCoord.x) / H;
+  float m = pow(clamp(fromTop / 0.243, 0.0, 1.0), 1.5)
+          * pow(clamp(fromBot / 0.15, 0.0, 1.0), 1.5)
+          * pow(clamp(fromSide / 0.25, 0.0, 1.0), 1.5);
 
-  // event horizon disc (hides stars behind it)
-  float horizon = smoothstep(R, R - 0.01, r);
-  col = mix(col, HORIZON, horizon);
-
-  // tone map
-  col = vec3(1.0) - exp(-col * 1.4);
-
-  // keep it an arch: fade the top and the far field back to background
-  float topFade = smoothstep(-0.05, 0.45, p.y + 0.30);
-  float vig = smoothstep(1.1, 0.3, r);
-  float mask = clamp(topFade, 0.0, 1.0) * vig;
-  col = mix(BG, col, mask);
-
-  // Alpha from brightness above BG plus the horizon, so the canvas
-  // composites as an arch over the page glow (no hard rectangle).
-  vec3 lift = max(col - BG, 0.0);
-  float horizonA = smoothstep(R, R - 0.01, r);
-  float alpha = clamp(max(max(lift.r, lift.g), lift.b) * 2.2 + horizonA, 0.0, 1.0);
-  alpha *= mask;
-  outColor = vec4(col * alpha, alpha); // premultiplied
+  outColor = vec4(col * m, alpha * m); // premultiplied
 }`;
 
 function compile(gl: WebGL2RenderingContext, type: number, src: string) {
@@ -128,21 +96,95 @@ function compile(gl: WebGL2RenderingContext, type: number, src: string) {
   return sh;
 }
 
-export function BlackHole({ className = "" }: { className?: string }) {
+// The shader loop is only worth running on real GPU hardware. On software
+// renderers (SwiftShader / llvmpipe, which is also what PageSpeed and many
+// low-end devices use) it blocks the main thread for tens of seconds, so we
+// bail out to the CSS arc fallback.
+const SOFTWARE_RE = /SwiftShader|llvmpipe|Software|Basic Render|ANGLE \(Software/i;
+
+function deviceAllowsWebGL(): boolean {
+  if (typeof navigator === "undefined") return false;
+  const nav = navigator as Navigator & {
+    connection?: { saveData?: boolean };
+    hardwareConcurrency?: number;
+  };
+  if (nav.connection?.saveData) return false;
+  if ((nav.hardwareConcurrency ?? 8) < 4) return false;
+  return true;
+}
+
+function onIdle(cb: () => void): () => void {
+  const w = window as Window & {
+    requestIdleCallback?: (cb: () => void) => number;
+    cancelIdleCallback?: (id: number) => void;
+  };
+  if (typeof w.requestIdleCallback === "function") {
+    const handle = w.requestIdleCallback(cb);
+    return () => w.cancelIdleCallback?.(handle);
+  }
+  const t = window.setTimeout(cb, 200);
+  return () => window.clearTimeout(t);
+}
+
+export function BlackHole({
+  className = "",
+  onReady,
+}: {
+  className?: string;
+  onReady?: () => void;
+}) {
   const reduce = useReducedMotion();
   const canvasRef = useRef<HTMLCanvasElement>(null);
   const mouse = useRef({ x: 0, y: 0, tx: 0, ty: 0 });
+  const readyRef = useRef(onReady);
+  readyRef.current = onReady;
 
   useEffect(() => {
+    if (!deviceAllowsWebGL()) return; // Save-Data / low-core → CSS arc
     const canvas = canvasRef.current;
     if (!canvas) return;
-    const gl = canvas.getContext("webgl2", {
+
+    let disposed = false;
+    let cleanup: (() => void) | undefined;
+
+    // Defer all GL work until the page has loaded and the main thread is idle,
+    // so it never competes with hydration or LCP.
+    const begin = () => {
+      if (disposed) return;
+      cleanup = setupGL();
+    };
+    let cancelIdle = () => {};
+    const startWhenReady = () => {
+      cancelIdle = onIdle(begin);
+    };
+    if (document.readyState === "complete") {
+      startWhenReady();
+    } else {
+      window.addEventListener("load", startWhenReady, { once: true });
+    }
+
+    function setupGL(): (() => void) | undefined {
+    const cv = canvas as HTMLCanvasElement;
+    const gl = cv.getContext("webgl2", {
       antialias: false,
       alpha: true,
       premultipliedAlpha: true,
       powerPreference: "low-power",
+      failIfMajorPerformanceCaveat: true,
     });
-    if (!gl) return; // no WebGL2 → CSS arc fallback stays visible
+    if (!gl) return; // no WebGL2 (or major perf caveat) → CSS arc fallback
+
+    // Refuse software renderers outright.
+    const dbg = gl.getExtension("WEBGL_debug_renderer_info");
+    if (dbg) {
+      const renderer = String(
+        gl.getParameter(dbg.UNMASKED_RENDERER_WEBGL) || ""
+      );
+      if (SOFTWARE_RE.test(renderer)) {
+        gl.getExtension("WEBGL_lose_context")?.loseContext();
+        return;
+      }
+    }
 
     gl.enable(gl.BLEND);
     gl.blendFunc(gl.ONE, gl.ONE_MINUS_SRC_ALPHA); // premultiplied alpha
@@ -175,53 +217,89 @@ export function BlackHole({ className = "" }: { className?: string }) {
     const SCALE = 0.75;
     const resize = () => {
       const dpr = Math.min(window.devicePixelRatio || 1, 1.5) * SCALE;
-      const w = Math.max(1, Math.floor(canvas.clientWidth * dpr));
-      const h = Math.max(1, Math.floor(canvas.clientHeight * dpr));
-      if (canvas.width !== w || canvas.height !== h) {
-        canvas.width = w;
-        canvas.height = h;
+      const w = Math.max(1, Math.floor(cv.clientWidth * dpr));
+      const h = Math.max(1, Math.floor(cv.clientHeight * dpr));
+      if (cv.width !== w || cv.height !== h) {
+        cv.width = w;
+        cv.height = h;
       }
-      gl.viewport(0, 0, canvas.width, canvas.height);
+      gl.viewport(0, 0, cv.width, cv.height);
     };
 
+    let signalled = false;
     const draw = (tSeconds: number) => {
       gl.clearColor(0, 0, 0, 0);
       gl.clear(gl.COLOR_BUFFER_BIT);
       gl.uniform1f(uTime, tSeconds);
-      gl.uniform2f(uRes, canvas.width, canvas.height);
+      gl.uniform2f(uRes, cv.width, cv.height);
       gl.uniform2f(uMouse, mouse.current.x, mouse.current.y);
       gl.drawArrays(gl.TRIANGLES, 0, 3);
+      if (!signalled) {
+        signalled = true;
+        readyRef.current?.(); // first good frame → Hero can hide the CSS arc
+      }
     };
 
     const ro = new ResizeObserver(resize);
-    ro.observe(canvas);
+    ro.observe(cv);
     resize();
+
+    const destroyGL = () => {
+      ro.disconnect();
+      gl.deleteProgram(prog);
+      gl.deleteShader(vs!);
+      gl.deleteShader(fs!);
+      gl.deleteBuffer(buf);
+    };
 
     // Reduced motion: draw a single still frame and stop.
     if (reduce) {
       draw(8.0);
-      return () => {
-        ro.disconnect();
-        gl.deleteProgram(prog);
-        gl.deleteShader(vs);
-        gl.deleteShader(fs);
-        gl.deleteBuffer(buf);
-      };
+      return destroyGL;
     }
 
     const start = performance.now();
     let raf = 0;
     let running = false;
+    let last = 0;
+    const FRAME_MS = 1000 / 30; // cap at 30fps
+
+    // Frame-budget guard: sample the first 20 frames; if the average is over
+    // 24ms (software/low-end), freeze on a still frame and stop the loop.
+    let probed = 0;
+    let probeSum = 0;
+    let probePrev = 0;
+    let giveUp = false;
 
     const loop = (now: number) => {
-      // ease the pointer
+      if (!running) return;
+      raf = requestAnimationFrame(loop);
+
+      // budget probe
+      if (!giveUp && probed < 20) {
+        if (probePrev) {
+          probeSum += now - probePrev;
+          probed += 1;
+          if (probed === 20 && probeSum / 20 > 24) {
+            giveUp = true;
+            draw(8.0); // leave one good frame
+            stop();
+            return;
+          }
+        }
+        probePrev = now;
+      }
+
+      // 30fps throttle
+      if (now - last < FRAME_MS) return;
+      last = now;
+
       mouse.current.x += (mouse.current.tx - mouse.current.x) * 0.06;
       mouse.current.y += (mouse.current.ty - mouse.current.y) * 0.06;
       draw((now - start) / 1000);
-      raf = requestAnimationFrame(loop);
     };
     const play = () => {
-      if (running) return;
+      if (running || giveUp) return;
       running = true;
       raf = requestAnimationFrame(loop);
     };
@@ -235,19 +313,23 @@ export function BlackHole({ className = "" }: { className?: string }) {
       ([e]) => (e.isIntersecting && !document.hidden ? play() : stop()),
       { threshold: 0 }
     );
-    io.observe(canvas);
+    io.observe(cv);
     const onVis = () => (document.hidden ? stop() : play());
     document.addEventListener("visibilitychange", onVis);
 
     return () => {
       stop();
       io.disconnect();
-      ro.disconnect();
       document.removeEventListener("visibilitychange", onVis);
-      gl.deleteProgram(prog);
-      gl.deleteShader(vs);
-      gl.deleteShader(fs);
-      gl.deleteBuffer(buf);
+      destroyGL();
+    };
+    } // end setupGL
+
+    return () => {
+      disposed = true;
+      cancelIdle();
+      window.removeEventListener("load", startWhenReady);
+      cleanup?.();
     };
   }, [reduce]);
 
@@ -286,24 +368,6 @@ export function BlackHole({ className = "" }: { className?: string }) {
       className={`pointer-events-none ${className}`}
     >
       <canvas ref={canvasRef} className="h-full w-full" />
-      {/* bottom gradient blends the canvas into the page */}
-      <div
-        className="absolute inset-x-0 bottom-0 h-1/3"
-        style={{
-          background: "linear-gradient(180deg, transparent, var(--color-bg))",
-        }}
-      />
-      {/* crisp horizon overlay, as Reflex does, to keep the centre clean at any DPR */}
-      <div
-        className="absolute left-1/2 top-[62%] h-[40%] w-[40%] -translate-x-1/2 -translate-y-1/2 rounded-full"
-        style={{
-          background: "#0C0530",
-          maskImage:
-            "radial-gradient(78% 78% at 50% 50%, #000 80%, transparent 100%)",
-          WebkitMaskImage:
-            "radial-gradient(78% 78% at 50% 50%, #000 80%, transparent 100%)",
-        }}
-      />
     </div>
   );
 }

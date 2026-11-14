@@ -1,7 +1,7 @@
 "use client";
 
 import { Fragment, type ReactNode } from "react";
-import { motion, useReducedMotion } from "motion/react";
+import { m, useReducedMotion } from "motion/react";
 import { ease, stagger, viewportOnce } from "@/lib/motion";
 
 type Tag = "h1" | "h2" | "h3" | "span" | "p";
@@ -27,7 +27,7 @@ export function SplitText({
   delayChildren?: number;
 }) {
   const reduce = useReducedMotion();
-  const MotionTag = motion[as];
+  const MotionTag = m[as];
   const Tag = as;
 
   const words = text.split(" ").filter(Boolean);
@@ -63,12 +63,12 @@ export function SplitText({
       key={key}
       className="inline-flex overflow-hidden pb-[0.12em] align-bottom"
     >
-      <motion.span
+      <m.span
         variants={wordVariants}
         className={`inline-block ${highlighted ? "grad-text" : ""}`}
       >
         {word}
-      </motion.span>
+      </m.span>
       <span className="inline-block">&nbsp;</span>
     </span>
   );
@@ -110,7 +110,7 @@ export function FadeUp({
   as?: "div" | "p" | "span";
 }) {
   const reduce = useReducedMotion();
-  const MotionTag = motion[as];
+  const MotionTag = m[as];
 
   if (reduce) {
     const Tag = as;

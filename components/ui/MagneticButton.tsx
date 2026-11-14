@@ -2,7 +2,7 @@
 
 import { useRef, type ReactNode, type PointerEvent } from "react";
 import {
-  motion,
+  m,
   useMotionValue,
   useSpring,
   useReducedMotion,
@@ -79,7 +79,7 @@ export function MagneticButton({
   };
 
   return (
-    <motion.a
+    <m.a
       ref={ref}
       href={href}
       aria-label={ariaLabel}
@@ -95,6 +95,6 @@ export function MagneticButton({
         className="pointer-events-none absolute inset-0 -translate-x-full skew-x-[-20deg] bg-gradient-to-r from-transparent via-white/20 to-transparent transition-transform duration-700 ease-out group-hover:translate-x-full"
       />
       <span className="relative inline-flex items-center gap-2">{children}</span>
-    </motion.a>
+    </m.a>
   );
 }

@@ -1,8 +1,8 @@
 "use client";
 
-import { useRef, type PointerEvent } from "react";
+import { useRef, useState, useCallback, type PointerEvent } from "react";
 import {
-  motion,
+  m,
   useMotionValue,
   useSpring,
   useInView,
@@ -28,6 +28,11 @@ export function Hero({ hasResume }: { hasResume: boolean }) {
   const sectionRef = useRef<HTMLElement>(null);
   const inView = useInView(sectionRef, { margin: "0px" });
   const paused = !inView;
+
+  // Once the WebGL black hole has drawn its first frame, fade the CSS arc
+  // fallback out so the two visuals never show at the same time.
+  const [bhReady, setBhReady] = useState(false);
+  const onBlackHoleReady = useCallback(() => setBhReady(true), []);
 
   // pointer parallax for the arc + glow
   const px = useMotionValue(0);
@@ -113,19 +118,19 @@ export function Hero({ hasResume }: { hasResume: boolean }) {
         </div>
 
         {/* glowing arc + console */}
-        <div className="relative mt-28 md:mt-36">
+        <div className="relative mt-28 md:mt-48">
           {/* glowing arc: rises behind the console, which overlaps its lower edge.
               top clamps the arc below the M.S. line so it never crosses the text. */}
-          <motion.div
+          <m.div
             aria-hidden="true"
             style={reduce ? undefined : { x: ax, y: ay }}
             initial={reduce ? undefined : { opacity: 0, y: 40, scale: 0.96 }}
             animate={reduce ? undefined : { opacity: 1, y: 0, scale: 1 }}
             transition={{ duration: 0.9, ease, delay: 0.3 }}
-            className="pointer-events-none absolute inset-x-0 bottom-0 top-[-90px] flex items-start justify-center overflow-hidden md:top-[-110px]"
+            className="pointer-events-none absolute inset-x-0 bottom-0 top-[-90px] flex items-start justify-center overflow-x-clip md:top-[-110px]"
           >
             <div className="relative h-[460px] w-[900px] max-w-[150vw]">
-              {/* soft ambient bloom */}
+              {/* soft ambient bloom (kept under both the CSS arc and the WebGL) */}
               <div
                 className="absolute inset-x-0 top-0 h-[360px] blur-[70px]"
                 style={{
@@ -133,54 +138,65 @@ export function Hero({ hasResume }: { hasResume: boolean }) {
                     "radial-gradient(50% 60% at 50% 55%, rgba(138,114,255,0.5), transparent 72%)",
                 }}
               />
-              {/* filled half-ellipse body */}
+
+              {/* CSS fallback arc: the rim / body / shimmer. Fades out once the
+                  WebGL black hole has drawn, so the two never show together. */}
               <div
-                className="absolute left-1/2 top-0 h-[460px] w-[760px] max-w-[128vw] -translate-x-1/2 rounded-[999px]"
-                style={{
-                  background:
-                    "radial-gradient(50% 50% at 50% 50%, rgba(124,92,255,0.30), rgba(84,34,196,0.10) 60%, transparent 72%)",
-                }}
-              />
-              {/* bright white-violet rim */}
-              <div
-                className="absolute left-1/2 top-0 h-[460px] w-[760px] max-w-[128vw] -translate-x-1/2 rounded-[999px]"
-                style={{
-                  padding: "1.5px",
-                  background:
-                    "conic-gradient(from 180deg at 50% 50%, rgba(220,210,255,0) 0deg, rgba(246,207,255,0.9) 120deg, rgba(188,211,255,0.9) 240deg, rgba(220,210,255,0) 360deg)",
-                  WebkitMask:
-                    "linear-gradient(#000 0 0) content-box, linear-gradient(#000 0 0)",
-                  WebkitMaskComposite: "xor",
-                  maskComposite: "exclude",
-                  filter: "blur(0.3px)",
-                }}
-              />
-              {/* shimmer sweep travelling along the rim */}
-              {!reduce && (
+                className="absolute inset-0 transition-opacity duration-700"
+                style={{ opacity: bhReady ? 0 : 1 }}
+              >
+                {/* filled half-ellipse body */}
                 <div
-                  className={`hero-arc-shimmer absolute left-1/2 top-0 h-[460px] w-[760px] max-w-[128vw] -translate-x-1/2 rounded-[999px] ${
-                    paused ? "motion-paused" : ""
-                  }`}
+                  className="absolute left-1/2 top-0 h-[460px] w-[760px] max-w-[128vw] -translate-x-1/2 rounded-[999px]"
+                  style={{
+                    background:
+                      "radial-gradient(50% 50% at 50% 50%, rgba(124,92,255,0.30), rgba(84,34,196,0.10) 60%, transparent 72%)",
+                  }}
+                />
+                {/* bright white-violet rim */}
+                <div
+                  className="absolute left-1/2 top-0 h-[460px] w-[760px] max-w-[128vw] -translate-x-1/2 rounded-[999px]"
                   style={{
                     padding: "1.5px",
                     background:
-                      "conic-gradient(from 0deg at 50% 50%, rgba(255,255,255,0) 0deg, rgba(255,255,255,0.85) 20deg, rgba(255,255,255,0) 60deg, rgba(255,255,255,0) 360deg)",
+                      "conic-gradient(from 180deg at 50% 50%, rgba(220,210,255,0) 0deg, rgba(246,207,255,0.9) 120deg, rgba(188,211,255,0.9) 240deg, rgba(220,210,255,0) 360deg)",
                     WebkitMask:
                       "linear-gradient(#000 0 0) content-box, linear-gradient(#000 0 0)",
                     WebkitMaskComposite: "xor",
                     maskComposite: "exclude",
+                    filter: "blur(0.3px)",
                   }}
                 />
-              )}
+                {/* shimmer sweep travelling along the rim */}
+                {!reduce && (
+                  <div
+                    className={`hero-arc-shimmer absolute left-1/2 top-0 h-[460px] w-[760px] max-w-[128vw] -translate-x-1/2 rounded-[999px] ${
+                      paused ? "motion-paused" : ""
+                    }`}
+                    style={{
+                      padding: "1.5px",
+                      background:
+                        "conic-gradient(from 0deg at 50% 50%, rgba(255,255,255,0) 0deg, rgba(255,255,255,0.85) 20deg, rgba(255,255,255,0) 60deg, rgba(255,255,255,0) 360deg)",
+                      WebkitMask:
+                        "linear-gradient(#000 0 0) content-box, linear-gradient(#000 0 0)",
+                      WebkitMaskComposite: "xor",
+                      maskComposite: "exclude",
+                    }}
+                  />
+                )}
+              </div>
 
-              {/* WebGL2 black hole on top: composites over the CSS arc, which
-                  is the fallback when WebGL2 is unavailable or reduced motion.
-                  It self-manages its render loop (pauses off-screen / tab hidden). */}
-              <BlackHole className="absolute left-1/2 top-0 h-[520px] w-[900px] max-w-[150vw] -translate-x-1/2" />
+              {/* WebGL2 black hole. Composites over the ambient bloom; the CSS
+                  arc above fades out once this draws its first frame. Falls back
+                  to the CSS arc when WebGL2 is unavailable or reduced motion. */}
+              <BlackHole
+                onReady={onBlackHoleReady}
+                className="absolute left-1/2 top-[-143px] h-[440px] w-[700px] max-w-none -translate-x-1/2 md:top-[-257px] md:h-[700px] md:w-[1100px]"
+              />
             </div>
-          </motion.div>
+          </m.div>
 
-          <motion.div
+          <m.div
             className={`relative z-10 ${reduce ? "" : "hero-console-float"} ${
               paused ? "motion-paused" : ""
             }`}
@@ -189,7 +205,7 @@ export function Hero({ hasResume }: { hasResume: boolean }) {
             transition={{ duration: 0.7, ease, delay: 0.5 }}
           >
             <AgentConsole />
-          </motion.div>
+          </m.div>
           <p className="sr-only">
             A mock agent console that turns a plain-language request into a
             validated automation workflow, then sends it to human review.
